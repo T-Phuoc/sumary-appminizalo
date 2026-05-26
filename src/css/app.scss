@@ -12,3 +12,770 @@
 .zaui-list-item {
   cursor: pointer;
 }
+
+
+/* src/css/app.scss */
+
+/* 1. Import Fonts (Lấy từ HTML cũ) */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800&family=Inter:wght@500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+/* 2. Tailwind Core (BẮT BUỘC để dùng w-full, flex,...) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. CSS Tùy chỉnh từ bản cũ */
+
+/* Ép font chữ cho toàn bộ ứng dụng */
+body, input, button, select, textarea, optgroup, option { 
+    font-family: 'Be Vietnam Pro', 'Poppins', sans-serif !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /* Màu nền dự phòng nếu ảnh/gradient lỗi */
+    background-color: #1e3a8a; 
+}
+
+/* --- NỀN MÀU (QUAN TRỌNG NHẤT) --- */
+.bg-glossy {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+}
+
+/* Vùng an toàn cho iPhone tai thỏ */
+.pb-safe { 
+    padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
+}
+
+/* Ẩn thanh cuộn */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* --- HIỆU ỨNG ANIMATION --- */
+
+/* Nổi lơ lửng */
+.float { animation: float 6s ease-in-out infinite; }
+.float-slow { animation: float 8s ease-in-out infinite; }
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Máy bay bay ngang */
+.fly-plane { animation: fly 20s linear infinite; }
+
+@keyframes fly {
+    0% { transform: translate(-10vw, 10vh) rotate(10deg); opacity: 0; }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% { transform: translate(110vw, -20vh) rotate(10deg); opacity: 0; }
+}
+
+/* Hiện dần */
+.fade-in { animation: fadeIn 0.5s ease-out forwards; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Nút bấm phát sáng */
+.pulse-glow { animation: pulse-glow 2s infinite; }
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+/* Hiệu ứng thẻ nổi 3D */
+.card-3d {
+    transition: all 0.3s ease;
+    transform: perspective(1000px) rotateX(0deg);
+}
+
+/* CSS cho nút chọn đáp án */
+.answer-btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Các class hỗ trợ Vòng quay (Wheel) */
+.wheel-segment {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    width: 50%;
+    height: 50%;
+}
+
+
+
+
+/* ============================
+   VISA TEST ZMP - Mobile-First CSS
+   Beautiful & Dynamic Edition
+   ============================ */
+   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+   /* ---- CSS Variables ---- */
+   :root {
+     --primary: #2563eb;
+     --primary-light: #3b82f6;
+     --primary-dark: #1d4ed8;
+     --accent: #7c3aed;
+     --cyan: #0891b2;
+     --green: #059669;
+     --yellow: #d97706;
+     --red: #dc2626;
+     --bg-gradient: linear-gradient(160deg, #f0f4ff 0%, #e8eeff 30%, #dde8fc 60%, #e4f0fb 100%);
+     --card-bg: rgba(255, 255, 255, 0.97);
+     --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+     --card-radius: 24px;
+     --font: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+   }
+   
+   /* ---- Reset & Base ---- */
+   * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+     -webkit-tap-highlight-color: transparent;
+     -webkit-user-select: none;
+     user-select: none;
+   }
+   
+   input, textarea {
+     -webkit-user-select: text;
+     user-select: text;
+   }
+   
+   html, body {
+     width: 100%;
+     min-height: 100%;
+     margin: 0;
+     padding: 0;
+     font-family: var(--font);
+     -webkit-font-smoothing: antialiased;
+     background: var(--bg-gradient);
+     background-attachment: fixed;
+     overflow-x: hidden;
+   }
+   
+   #app {
+     min-height: 100vh;
+     position: relative;
+   }
+   
+   /* ---- Animated background particles ---- */
+   .bg-particles {
+     position: fixed;
+     inset: 0;
+     pointer-events: none;
+     z-index: 0;
+     overflow: hidden;
+   }
+   .bg-particles .particle {
+     position: absolute;
+     border-radius: 50%;
+     background: rgba(59, 130, 246, 0.05);
+     animation: particleFloat 20s ease-in-out infinite;
+   }
+   .bg-particles .particle:nth-child(1) { width: 200px; height: 200px; top: 10%; left: -50px; animation-delay: 0s; }
+   .bg-particles .particle:nth-child(2) { width: 150px; height: 150px; top: 60%; right: -40px; animation-delay: -5s; }
+   .bg-particles .particle:nth-child(3) { width: 100px; height: 100px; bottom: 10%; left: 30%; animation-delay: -10s; }
+   .bg-particles .particle:nth-child(4) { width: 80px; height: 80px; top: 30%; right: 20%; animation-delay: -15s; }
+   
+   @keyframes particleFloat {
+     0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+     25% { transform: translate(30px, -40px) scale(1.1); opacity: 0.5; }
+     50% { transform: translate(-20px, -80px) scale(0.9); opacity: 0.3; }
+     75% { transform: translate(40px, -40px) scale(1.05); opacity: 0.4; }
+   }
+   
+   /* ---- ZMP overrides ---- */
+   .zaui-app,
+   .zaui-page {
+     background: transparent !important;
+   }
+   
+   ::-webkit-scrollbar { width: 3px; }
+   ::-webkit-scrollbar-track { background: transparent; }
+   ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+   
+   /* ---- iOS input zoom fix (>=16px) ---- */
+   input[type="text"],
+   input[type="email"],
+   input[type="tel"],
+   input[type="number"],
+   select, textarea,
+   .zaui-input {
+     font-size: 16px !important;
+   }
+   input[type="date"] {
+     font-size: 18px !important;
+     height: 52px !important;
+     min-height: 52px !important;
+     padding: 14px 16px !important;
+     line-height: 1.2 !important;
+     width: 100% !important;
+     box-sizing: border-box !important;
+   }
+   
+   /* ---- ZMP Input override ---- */
+   .zaui-input {
+     border-radius: 14px !important;
+     border: 2px solid #e2e8f0 !important;
+     padding: 12px 16px !important;
+     background: #f8fafc !important;
+     transition: all 0.25s ease !important;
+   }
+   .zaui-input:focus {
+     border-color: var(--primary-light) !important;
+     box-shadow: 0 0 0 4px rgba(59,130,246,0.1) !important;
+     background: #fff !important;
+   }
+   
+   /* ---- Card ---- */
+   .app-card {
+     background: var(--card-bg);
+     border-radius: var(--card-radius);
+     box-shadow: var(--card-shadow);
+     border: 1px solid rgba(0, 0, 0, 0.06);
+     backdrop-filter: blur(10px);
+     position: relative;
+     overflow: hidden;
+   }
+   .app-card::before {
+     content: '';
+     position: absolute;
+     top: 0; left: 0; right: 0;
+     height: 3px;
+     background: linear-gradient(90deg, var(--primary), var(--accent), var(--cyan));
+     border-radius: var(--card-radius) var(--card-radius) 0 0;
+     opacity: 0.8;
+   }
+   
+   /* ---- Glass card variant ---- */
+   .glass-card {
+     background: rgba(255, 255, 255, 0.7);
+     backdrop-filter: blur(20px);
+     border: 1px solid rgba(59, 130, 246, 0.12);
+     border-radius: var(--card-radius);
+   }
+   
+   /* ---- Keyframe Animations ---- */
+   @keyframes fadeSlideUp {
+     from { opacity: 0; transform: translateY(24px); }
+     to   { opacity: 1; transform: translateY(0); }
+   }
+   @keyframes fadeSlideDown {
+     from { opacity: 0; transform: translateY(-24px); }
+     to   { opacity: 1; transform: translateY(0); }
+   }
+   @keyframes fadeSlideLeft {
+     from { opacity: 0; transform: translateX(40px); }
+     to   { opacity: 1; transform: translateX(0); }
+   }
+   @keyframes fadeSlideRight {
+     from { opacity: 0; transform: translateX(-40px); }
+     to   { opacity: 1; transform: translateX(0); }
+   }
+   @keyframes fadeIn {
+     from { opacity: 0; }
+     to   { opacity: 1; }
+   }
+   @keyframes scaleIn {
+     from { opacity: 0; transform: scale(0.8); }
+     to   { opacity: 1; transform: scale(1); }
+   }
+   @keyframes scaleBounce {
+     0% { opacity: 0; transform: scale(0.3); }
+     50% { opacity: 1; transform: scale(1.05); }
+     70% { transform: scale(0.95); }
+     100% { opacity: 1; transform: scale(1); }
+   }
+   @keyframes spin {
+     to { transform: rotate(360deg); }
+   }
+   @keyframes slideDown {
+     from { opacity: 0; transform: translateY(-20px); }
+     to   { opacity: 1; transform: translateY(0); }
+   }
+   @keyframes shimmerSlide {
+     0%   { transform: translateX(-100%); }
+     100% { transform: translateX(200%); }
+   }
+   @keyframes bounceGentle {
+     0%, 100% { transform: translateY(0); }
+     50%      { transform: translateY(-6px); }
+   }
+   @keyframes floatSlow {
+     0%, 100% { transform: translateY(0) rotate(0deg); }
+     33% { transform: translateY(-8px) rotate(1deg); }
+     66% { transform: translateY(-4px) rotate(-1deg); }
+   }
+   @keyframes pulse {
+     0%, 100% { transform: scale(1); opacity: 1; }
+     50% { transform: scale(1.05); opacity: 0.9; }
+   }
+   @keyframes ripple {
+     0% { transform: scale(0); opacity: 0.6; }
+     100% { transform: scale(4); opacity: 0; }
+   }
+   @keyframes slideInStagger {
+     from { opacity: 0; transform: translateY(12px) scale(0.97); }
+     to   { opacity: 1; transform: translateY(0) scale(1); }
+   }
+   @keyframes glowPulse {
+     0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.2); }
+     50% { box-shadow: 0 0 30px rgba(37, 99, 235, 0.4); }
+   }
+   @keyframes countUp {
+     from { opacity: 0; transform: translateY(10px); }
+     to { opacity: 1; transform: translateY(0); }
+   }
+   
+   /* Quiz slide transitions */
+   @keyframes quizSlideIn {
+     from { opacity: 0; transform: translateX(60px) scale(0.95); }
+     to   { opacity: 1; transform: translateX(0) scale(1); }
+   }
+   @keyframes quizSlideOut {
+     from { opacity: 1; transform: translateX(0) scale(1); }
+     to   { opacity: 0; transform: translateX(-60px) scale(0.95); }
+   }
+   @keyframes optionPop {
+     from { opacity: 0; transform: translateY(16px) scale(0.92); }
+     to   { opacity: 1; transform: translateY(0) scale(1); }
+   }
+   @keyframes selectedPulse {
+     0% { transform: scale(1); }
+     50% { transform: scale(0.97); }
+     100% { transform: scale(1); }
+   }
+   @keyframes checkPop {
+     0% { transform: scale(0) rotate(-45deg); }
+     60% { transform: scale(1.2) rotate(0deg); }
+     100% { transform: scale(1) rotate(0deg); }
+   }
+   
+   /* ---- Animation Classes ---- */
+   .anim-fade-up    { animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+   .anim-fade-down  { animation: fadeSlideDown 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+   .anim-fade-left  { animation: fadeSlideLeft 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+   .anim-fade-right { animation: fadeSlideRight 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+   .anim-fade-in    { animation: fadeIn 0.35s ease-out both; }
+   .anim-scale-in   { animation: scaleBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+   .anim-slide-down { animation: slideDown 0.4s ease-out both; }
+   .anim-spin       { animation: spin 1s linear infinite; }
+   .anim-bounce     { animation: bounceGentle 2s ease-in-out infinite; }
+   .anim-float      { animation: floatSlow 6s ease-in-out infinite; }
+   .anim-pulse      { animation: pulse 2s ease-in-out infinite; }
+   .anim-glow       { animation: glowPulse 3s ease-in-out infinite; }
+   .shimmer-overlay { animation: shimmerSlide 3s ease-in-out infinite; }
+   
+   /* Quiz specific */
+   .quiz-slide-in  { animation: quizSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+   .quiz-slide-out { animation: quizSlideOut 0.25s ease-in both; }
+   .quiz-enter     { animation: fadeIn 0.3s ease-out both; }
+   .quiz-exit      { animation: fadeIn 0.2s ease-in reverse both; }
+   
+   .option-enter {
+     animation: optionPop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+   }
+   .option-selected {
+     animation: selectedPulse 0.3s ease both;
+   }
+   .check-pop {
+     animation: checkPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+   }
+   
+   /* Stagger delays */
+   .stagger-1 { animation-delay: 0.05s; }
+   .stagger-2 { animation-delay: 0.1s; }
+   .stagger-3 { animation-delay: 0.15s; }
+   .stagger-4 { animation-delay: 0.2s; }
+   .stagger-5 { animation-delay: 0.25s; }
+   .stagger-6 { animation-delay: 0.3s; }
+   .stagger-7 { animation-delay: 0.35s; }
+   .stagger-8 { animation-delay: 0.4s; }
+   
+   /* ---- Progress bar ---- */
+   .progress-bar {
+     height: 100%;
+     border-radius: 8px;
+     transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+     position: relative;
+     overflow: hidden;
+   }
+   .progress-bar::after {
+     content: '';
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+     animation: shimmerSlide 2s infinite;
+   }
+   
+   /* ---- Gradient text ---- */
+   .gradient-text {
+     background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     background-clip: text;
+   }
+   
+   /* ---- Touch feedback ---- */
+   .touch-item {
+     transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
+     will-change: transform;
+   }
+   .touch-item:active {
+     transform: scale(0.96);
+   }
+   
+   /* ---- Ripple effect ---- */
+   .ripple-container {
+     position: relative;
+     overflow: hidden;
+   }
+   .ripple-container .ripple {
+     position: absolute;
+     border-radius: 50%;
+     background: rgba(255, 255, 255, 0.3);
+     animation: ripple 0.6s ease-out;
+     pointer-events: none;
+   }
+   
+   /* ---- Button styles ---- */
+   .btn-primary {
+     width: 100%;
+     padding: 15px 24px;
+     border: none;
+     border-radius: 16px;
+     background: linear-gradient(135deg, var(--primary), var(--accent));
+     color: #fff;
+     font-size: 17px;
+     font-weight: 800;
+     font-family: var(--font);
+     box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+     cursor: pointer;
+     position: relative;
+     overflow: hidden;
+     letter-spacing: 0.3px;
+   }
+   .btn-primary::after {
+     content: '';
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+     animation: shimmerSlide 3s ease-in-out infinite;
+   }
+   
+   .btn-secondary {
+     width: 100%;
+     padding: 13px 18px;
+     border-radius: 16px;
+     border: 2px solid #e2e8f0;
+     background: rgba(255, 255, 255, 0.9);
+     color: #64748b;
+     font-size: 15px;
+     font-weight: 700;
+     font-family: var(--font);
+     cursor: pointer;
+     backdrop-filter: blur(4px);
+   }
+   .btn-secondary:active {
+     background: #f1f5f9;
+     border-color: #cbd5e1;
+   }
+   
+   /* ---- Gauge stroke ---- */
+   .gauge-stroke {
+     transition: stroke-dashoffset 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+   }
+   
+   /* ---- Error text ---- */
+   .error-text {
+     color: #ef4444;
+     font-size: 12px;
+     margin-top: 5px;
+     font-weight: 600;
+     animation: fadeSlideUp 0.2s ease both;
+   }
+   
+   /* ---- Country grid ---- */
+   .country-grid {
+     display: grid;
+     grid-template-columns: repeat(2, 1fr);
+     gap: 12px;
+   }
+   
+   /* ---- Feature card hover ---- */
+   .feature-card {
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
+   }
+   .feature-card:active {
+     transform: translateY(-2px);
+     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+   }
+   
+   /* ---- Step indicator ---- */
+   .step-dots {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 6px;
+   }
+   .step-dot {
+     width: 8px;
+     height: 8px;
+     border-radius: 50%;
+     background: rgba(37, 99, 235, 0.15);
+     transition: all 0.3s ease;
+   }
+   .step-dot.active {
+     width: 24px;
+     border-radius: 4px;
+     background: var(--primary);
+   }
+   .step-dot.done {
+     background: rgba(37, 99, 235, 0.35);
+   }
+   
+   /* ---- Safe area bottom ---- */
+   .safe-bottom {
+     padding-bottom: max(16px, env(safe-area-inset-bottom));
+   }
+   
+   
+   
+   
+   
+   /* =========================================
+      DEEP SEA SCENE - GENTLE LAPPING WAVES
+      ========================================= */
+   
+   .ocean-scene {
+     position: absolute;
+     inset: 0;
+     z-index: 0;
+     background: linear-gradient(180deg, #e0f7fa 0%, #ffffff 40%, #74b9ff 70%, #03e2ff 100%);
+     overflow: hidden;
+   
+     // Hiệu ứng ánh sáng
+     .ocean-overlay {
+       position: absolute;
+       inset: 0;
+       background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 80%);
+     }
+   
+     // Trạng thái chuyển câu hỏi: Bọt biển dâng lên
+     &.is-transitioning {
+       .sea-foam {
+         height: 100vh !important; // Dâng trùm card
+         transition: height 0.9s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+         opacity: 0.95;
+       }
+     }
+   }
+   
+   // --- Các tầng sóng (Lapping Waves) ---
+   .wave-layer {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 200%;
+     height: 300px;
+     background-repeat: repeat-x;
+     background-size: 50% 100%;
+     pointer-events: none;
+   }
+   
+   // SVG hình sóng cuộn mềm mại
+   .wave-back {
+     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 200"><path fill="%23b2ebf2" d="M0,160 C400,240 800,80 1200,160 L1600,160 L1600,200 L0,200 Z"></path></svg>');
+     animation: wave_move 15s linear infinite;
+     opacity: 0.3;
+   }
+   
+   .wave-middle {
+     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 200"><path fill="%2380deea" d="M0,180 C400,120 800,260 1200,180 L1600,180 L1600,200 L0,200 Z"></path></svg>');
+     animation: wave_move 10s linear infinite reverse;
+     opacity: 0.4;
+     height: 250px;
+   }
+   
+   .wave-front {
+     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 200"><path fill="%234dd0e1" d="M0,140 C400,200 800,100 1200,140 L1600,140 L1600,200 L0,200 Z"></path></svg>');
+     animation: wave_move 7s linear infinite;
+     opacity: 0.5;
+     height: 200px;
+   }
+   
+   @keyframes wave_move {
+     0% { transform: translateX(0); }
+     100% { transform: translateX(-50%); }
+   }
+   
+   // --- Bọt biển (Sea Foam - Đập vào bờ) ---
+   .sea-foam {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 200%;
+     height: 120px;
+     background-repeat: repeat-x;
+     background-size: 50% 100%;
+     pointer-events: none;
+     opacity: 0.7;
+     filter: blur(2px); // Tạo độ xốp
+     transition: height 0.7s ease-in-out;
+   }
+   
+   // SVG hình bọt biển đập vào bờ trắng xóa
+   .foam-1 {
+     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 200"><path fill="%23ffffff" d="M0,160 C100,200 200,120 300,160 C400,200 500,120 600,160 C700,200 800,120 900,160 C1000,200 1100,120 1200,160 C1300,200 1400,120 1500,160 L1600,160 L1600,200 L0,200 Z"></path></svg>');
+     animation: foam_move 6s linear infinite;
+   }
+   
+   .foam-2 {
+     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 200"><path fill="%23ffffff" fill-opacity="0.6" d="M0,180 C150,140 300,220 450,180 C600,140 750,220 900,180 C1050,140 1200,220 1350,180 L1600,180 L1600,200 L0,200 Z"></path></svg>');
+     animation: foam_move 8s linear infinite reverse;
+     bottom: 10px;
+   }
+   
+   .foam-3 {
+     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 200"><path fill="%23ffffff" fill-opacity="0.3" d="M0,140 C200,100 400,180 600,140 C800,100 1000,180 1200,140 L1600,140 L1600,200 L0,200 Z"></path></svg>');
+     animation: foam_move 12s linear infinite;
+     bottom: 20px;
+   }
+   
+   @keyframes foam_move {
+     0% { transform: translateX(0); }
+     100% { transform: translateX(-50%); }
+   }
+   
+   // --- Style cho Card và Tùy chọn mới (Deep Sea Style) ---
+   .card-deep-sea {
+     background: rgba(255, 255, 255, 0.95);
+     border-radius: 24px;
+     box-shadow: 0 12px 36px rgba(0, 151, 167, 0.15);
+     border: 4px solid #01579b;
+   }
+   
+   .badge-deep-sea {
+     background: linear-gradient(135deg, #20aefb, #004864);
+     box-shadow: 0 4px 12px rgba(0, 96, 100, 0.3);
+   }
+   
+   .option-deep-sea {
+     border: 2px solid rgba(178, 235, 242, 0.6);
+     background: #fff;
+     transition: all 0.25s ease-in-out;
+   
+     &:active {
+       transform: scale(0.97);
+     }
+   
+     &.option-selected {
+       background: #e0f2f1;
+       border-color: #00acc1;
+       box-shadow: 0 4px 16px rgba(0, 172, 193, 0.2);
+     }
+   }
+   
+   .option-letter-deep-sea {
+     width: 36px;
+     height: 36px;
+     border-radius: 12px;
+     flex-shrink: 0;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: rgba(178, 235, 242, 0.5);
+     color: #006064;
+     font-weight: 900;
+     font-size: 14px;
+     transition: all 0.2s ease;
+   
+     &.selected {
+       background: #00acc1;
+       color: #fff;
+     }
+   }
+   
+   .step-dot.deep-sea {
+     &.active {
+       background: #00acc1;
+     }
+     &.done {
+       background: rgba(0, 172, 193, 0.4);
+     }
+   }
+   
+   // --- Tinh chỉnh hiệu ứng chuyển card ---
+   .quiz-slide-out {
+     animation: lapOut 0.45s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53);
+   }
+   
+   @keyframes lapOut {
+     0% { transform: translateY(0); opacity: 1; }
+     20% { transform: translateY(-10px); }
+     100% { transform: translateY(100vh); opacity: 0; } // Card trôi đi theo bọt biển
+   }
+   
+   
+   /* --- Hiệu ứng máy bay và mây trôi --- */
+   /* Máy bay bay ngang màn hình và hơi nghiêng */
+   /* --- QUỸ ĐẠO LƯỢN SÓNG (Dùng chung cho cả chim & máy bay) --- */
+   @keyframes plane-fly {
+     0% {
+       left: -15%;
+       top: 15%;
+       transform: rotate(12deg) scale(0.8);
+     }
+     25% {
+       top: 8%; /* Bay vút lên */
+       transform: rotate(5deg) scale(1);
+     }
+     50% {
+       top: 22%; /* Hạ độ cao lượn sóng */
+       transform: rotate(-2deg) scale(1.1); /* Phóng to nhẹ khi ở gần giữa */
+     }
+     75% {
+       top: 10%; /* Lên lại lần nữa */
+       transform: rotate(-8deg) scale(1);
+     }
+     100% {
+       left: 115%;
+       top: 18%;
+       transform: rotate(-12deg) scale(0.8);
+     }
+   }
+   
+   /* --- MÂY TRÔI BỒNG BỀNH (Nhấp nhô tại chỗ) --- */
+   @keyframes float-slow {
+     0%, 100% { transform: translate(0, 0) rotate(0deg); }
+     50% { transform: translate(25px, -15px) rotate(2deg); }
+   }
+   
+   /* --- CHIM ĐẬP CÁNH (Tạo sự khác biệt với máy bay) --- */
+   @keyframes wing-flap {
+     0%, 100% { transform: scaleY(1); }
+     50% { transform: scaleY(0.65); }
+   }
+   
+   /* --- HIỆU ỨNG CARD TRÔI ĐI KHI CHỌN XONG --- */
+   @keyframes lapOut {
+     0% { transform: translateY(0); opacity: 1; }
+     100% { transform: translateY(100vh); opacity: 0; }
+   }
+   
+   
+   
