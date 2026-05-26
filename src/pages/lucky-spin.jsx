@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Box, Button, Page, Text, Modal } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Volume2, VolumeX } from "lucide-react";
 import bgMain from "../assets/bg_main.png";
 import jazzBgm from "../assets/sounds/Jazz.m4a";
 import jackpotSfx from "../assets/sounds/Jackpot.m4a";
@@ -66,6 +65,33 @@ const NUM_REWARDS = REWARDS.length;
 const ARC_SIZE = (2 * Math.PI) / NUM_REWARDS;
 
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+const VolumeIcon = ({ muted = false, size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    {muted ? (
+      <>
+        <line x1="23" y1="9" x2="17" y2="15" />
+        <line x1="17" y1="9" x2="23" y2="15" />
+      </>
+    ) : (
+      <>
+        <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+        <path d="M19 5a9 9 0 0 1 0 14" />
+      </>
+    )}
+  </svg>
+);
 
 const pickWeightedIndex = (items) => {
   const totalWeight = items.reduce((sum, r) => sum + r.weight, 0);
@@ -521,7 +547,7 @@ const LuckySpinPage = () => {
               onClick={toggleMute}
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
-              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              <VolumeIcon muted={isMuted} size={20} />
             </Button>
           </Box>
         </Box>
