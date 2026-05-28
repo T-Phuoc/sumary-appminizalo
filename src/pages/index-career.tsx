@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Page } from "zmp-ui";
 import { getAccessToken, getPhoneNumber } from "zmp-sdk/apis";
+import "react/jsx-runtime";
 
 import { useQuizLogic } from "../hooks/useQuizLogic";
 import WelcomeScreen from "../components/WelcomeScreen";

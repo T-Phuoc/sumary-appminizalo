@@ -105,9 +105,9 @@ const handlePlayNow = async (target = "/game") => {
           </Box>
         </Box>
 
-        <Box className="w-full">
-          <Button className="btn-play-now" onClick={() => handlePlayNow("/game")}>CHƠI NGAY</Button>
-          <Button className="btn-lucky-spin" onClick={() => handlePlayNow("/lucky-spin")}>VÒNG QUAY MAY MẮN</Button>
+        <Box className="w-full flex justify-center gap-4">
+          <Button className="btn-play-now flex-1 max-w-xs" onClick={() => handlePlayNow("/game")}>vượt sóng cùng HTO</Button>
+          <Button className="btn-lucky-spin flex-1 max-w-xs" onClick={() => handlePlayNow("/lucky-spin")}>VÒNG QUAY MAY MẮN</Button>
         </Box>
       </Box>
 
