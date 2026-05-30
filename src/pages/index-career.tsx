@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Page } from "zmp-ui";
+import { Page, useNavigate } from "zmp-ui";
 import { getAccessToken, getPhoneNumber } from "zmp-sdk/apis";
 import "react/jsx-runtime";
 
@@ -15,6 +15,7 @@ import { fetchZaloUserName } from "../components/numerology/api";
 import { NumerologyFormValues } from "../components/numerology/types";
 
 function HomePagecareer() {
+  const navigate = useNavigate();
   const quizState = useQuizLogic();
   const [fetchedPhone, setFetchedPhone] = useState("");
   const [activeProduct, setActiveProduct] = useState<"hub" | "future-map" | "numerology">("hub");
@@ -73,6 +74,7 @@ function HomePagecareer() {
       <div className="relative w-full max-w-md min-h-screen mx-auto">
         {activeProduct === "hub" ? (
           <ProductSelectionScreen
+            onBackToExplore={() => navigate("/more")}
             onOpenFutureMap={() => setActiveProduct("future-map")}
             onOpenNumerology={handleOpenNumerology}
           />

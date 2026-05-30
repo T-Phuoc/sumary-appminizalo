@@ -110,8 +110,8 @@ useEffect(() => {
   if (loading || !result) {
     return (
       <Page style={{ background: '#f8fafc' }}>
-        <Box style={{ padding: 40, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <Box className="anim-pulse" style={{ width: 100, height: 100, borderRadius: 30, marginBottom: 20, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
+        <Box style={{ padding: 28, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Box className="anim-pulse" style={{ width: 92, height: 92, borderRadius: 30, marginBottom: 16, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
             <Text style={{ fontSize: 44 }} className="anim-bounce">📊</Text>
           </Box>
           <Text style={{ color: '#1e293b', fontSize: 18, fontWeight: 800 }}>Đang thẩm định hồ sơ...</Text>
@@ -127,11 +127,11 @@ useEffect(() => {
 
   return (
     <Page style={{ background: '#f8fafc' }}>
-      <Box className="safe-bottom" style={{ padding: '16px', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box className="safe-bottom" style={{ padding: '12px', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
         {/* 1. Header gradient card */}
         <Box className="anim-fade-down" style={{
-          width: '100%', maxWidth: 420, borderRadius: 28, padding: '32px 22px 68px',
+          width: '100%', maxWidth: 420, borderRadius: 28, padding: '24px 18px 56px',
           background: theme.gradient, textAlign: 'center', position: 'relative', overflow: 'hidden',
           boxShadow: `0 20px 40px ${theme.glow}, inset 0 0 20px rgba(255,255,255,0.1)`,
         }}>
@@ -148,7 +148,7 @@ useEffect(() => {
         </Box>
 
         {/* 2. Score gauge */}
-        <Box className="anim-scale-in" style={{ marginTop: -52, zIndex: 10, marginBottom: 20 }}>
+        <Box className="anim-scale-in" style={{ marginTop: -42, zIndex: 10, marginBottom: 16 }}>
           <Box style={{ background: '#fff', borderRadius: '50%', padding: 10, boxShadow: `0 15px 35px rgba(0,0,0,0.12)` }}>
             <Box style={{ position: 'relative', width: 125, height: 125, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg style={{ position: 'absolute', inset: 0, transform: 'rotate(-90deg)' }} viewBox="0 0 120 120">
@@ -164,23 +164,23 @@ useEffect(() => {
         </Box>
 
         {/* 3. Status badge */}
-        <Box className="anim-fade-up" style={{ textAlign: 'center', marginBottom: 30 }}>
-          <Text style={{ fontSize: 44, marginBottom: 10, display: 'block' }}>{result.emoji}</Text>
+        <Box className="anim-fade-up" style={{ textAlign: 'center', marginBottom: 22 }}>
+          <Text style={{ fontSize: 40, marginBottom: 8, display: 'block' }}>{result.emoji}</Text>
           <Text style={{ fontSize: 26, fontWeight: 900, color: theme.text }}>Hồ sơ {result.status}</Text>
           {result.rate && (
-            <Box style={{ display: 'inline-flex', background: theme.gradient, borderRadius: 50, padding: '8px 20px', marginTop: 15, boxShadow: `0 8px 20px ${theme.glow}` }}>
+            <Box style={{ display: 'inline-flex', background: theme.gradient, borderRadius: 50, padding: '7px 18px', marginTop: 12, boxShadow: `0 8px 20px ${theme.glow}` }}>
               <Text style={{ fontSize: 15, fontWeight: 900, color: '#fff' }}>🔥 Tỉ lệ đậu: {result.rate}</Text>
             </Box>
           )}
         </Box>
 
         {/* 4. Content area */}
-        <Box style={{ width: '100%', maxWidth: 420, opacity: showContent ? 1 : 0, transform: showContent ? 'none' : 'translateY(30px)', transition: 'all 0.8s' }}>
+        <Box style={{ width: '100%', maxWidth: 420, opacity: showContent ? 1 : 0, transform: showContent ? 'none' : 'translateY(24px)', transition: 'all 0.8s' }}>
           
           {/* CHI TIẾT ĐIỂM SỐ (PHẦN BẠN CẦN) */}
           {result.breakdown?.length > 0 && (
-            <Box className="app-card" style={{ padding: '0', marginBottom: 20, borderRadius: 24, border: '1.5px solid #f1f5f9', overflow: 'hidden', background: '#ffffff' }}>
-              <Box onClick={() => setIsBreakdownOpen(!isBreakdownOpen)} style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: isBreakdownOpen ? '#f8fafc' : '#ffffff', transition: 'background 0.3s' }}>
+            <Box className="app-card" style={{ padding: '0', marginBottom: 16, borderRadius: 24, border: '1.5px solid #f1f5f9', overflow: 'hidden', background: '#ffffff' }}>
+              <Box onClick={() => setIsBreakdownOpen(!isBreakdownOpen)} style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: isBreakdownOpen ? '#f8fafc' : '#ffffff', transition: 'background 0.3s' }}>
                 <Box style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <Box style={{ background: theme.bg, padding: 8, borderRadius: 12, fontSize: 20 }}>📋</Box>
                   <Text style={{ fontWeight: 900, color: '#0f172a', fontSize: 16 }}>Chi Tiết Điểm Số</Text>
@@ -189,8 +189,8 @@ useEffect(() => {
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </Box>
               </Box>
-              <Box style={{ maxHeight: isBreakdownOpen ? '1000px' : '0px', opacity: isBreakdownOpen ? 1 : 0, overflow: 'hidden', transition: 'all 0.5s', padding: isBreakdownOpen ? '0 20px 24px' : '0 20px' }}>
-                <Box style={{ height: '1px', background: '#f1f5f9', marginBottom: 20 }} />
+              <Box style={{ maxHeight: isBreakdownOpen ? '1000px' : '0px', opacity: isBreakdownOpen ? 1 : 0, overflow: 'hidden', transition: 'all 0.5s', padding: isBreakdownOpen ? '0 16px 20px' : '0 16px' }}>
+                <Box style={{ height: '1px', background: '#f1f5f9', marginBottom: 16 }} />
                 <Box style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {result.breakdown.map((item, idx) => (
                     <Box key={idx}>
@@ -209,7 +209,7 @@ useEffect(() => {
           )}
 
           {/* 5. Sales pitch */}
-          <Box style={{ background: 'linear-gradient(135deg, #ffffff 0%, #fff9e6 100%)', borderRadius: 24, padding: '24px 20px', marginBottom: 24, border: '2px solid #fbbf24', boxShadow: '0 12px 30px rgba(245,158,11,0.15)' }}>
+          <Box style={{ background: 'linear-gradient(135deg, #ffffff 0%, #fff9e6 100%)', borderRadius: 24, padding: '20px 16px', marginBottom: 18, border: '2px solid #fbbf24', boxShadow: '0 12px 30px rgba(245,158,11,0.15)' }}>
              <Text style={{ fontSize: 17, fontWeight: 900, color: '#1e293b', marginBottom: 8 }}>
                 {result.color === 'green' || result.color === 'blue' ? '🎉 Cơ hội vàng cho bạn!' : '💪 HTO có giải pháp cho bạn'}
              </Text>
@@ -223,7 +223,7 @@ useEffect(() => {
             onClick={handleCallHotline}
             className="hotline-shiny-card"
             style={{ 
-              padding: '20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16,
+              padding: '18px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 14,
               background: 'linear-gradient(90deg, #01579b, #00acc1, #01579b)',
               backgroundSize: '200% auto',
               borderRadius: 24,
@@ -252,7 +252,7 @@ useEffect(() => {
             </Box>
           </Box>
 
-          <button className="btn-primary touch-item" onClick={resetAll} style={{ marginBottom: 32 }}>🔄 Làm Bài Đánh Giá Mới</button>
+          <button className="btn-primary touch-item" onClick={resetAll} style={{ marginBottom: 24 }}>🔄 Làm Bài Đánh Giá Mới</button>
         </Box>
       </Box>
 

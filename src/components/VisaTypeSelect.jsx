@@ -84,7 +84,7 @@ function VisaTypeSelect() {
         style={{
           position: "relative",
           zIndex: 10,
-          padding: "env(safe-area-inset-top) 16px 20px",
+          padding: "env(safe-area-inset-top) 14px 16px",
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -119,7 +119,7 @@ function VisaTypeSelect() {
           <Box
             className="app-card card-deep-sea anim-fade-up"
             style={{
-              padding: "40px 18px",
+              padding: "28px 16px",
               width: "100%",
               maxWidth: 460,
               position: "relative",
@@ -131,14 +131,14 @@ function VisaTypeSelect() {
               backdropFilter: "blur(12px)",
             }}
           >
-            <Box style={{ textAlign: "center", marginBottom: 30 }}>
+            <Box style={{ textAlign: "center", marginBottom: 20 }}>
               <Box
                 className="badge-deep-sea pulse-slow shine-effect"
                 style={{
                   display: "inline-block",
-                  padding: "8px 24px",
+                  padding: "8px 22px",
                   borderRadius: 50,
-                  marginBottom: 16,
+                  marginBottom: 12,
                   position: "relative",
                   overflow: "hidden",
                 }}
@@ -172,8 +172,8 @@ function VisaTypeSelect() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 20,
-                marginBottom: 28,
+                gap: 16,
+                marginBottom: 20,
               }}
             >
               {types.map((t, i) => {
@@ -186,7 +186,7 @@ function VisaTypeSelect() {
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      padding: "22px 18px",
+                      padding: "18px 16px",
                       borderRadius: 28,
                       border: `3px solid ${isActive ? t.border : "rgba(1, 87, 155, 0.15)"}`,
                       background: t.bgGradient,
@@ -204,8 +204,8 @@ function VisaTypeSelect() {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 16,
-                        marginBottom: 14,
+                        gap: 14,
+                        marginBottom: 10,
                         position: "relative",
                         zIndex: 2,
                       }}
@@ -299,7 +299,7 @@ function VisaTypeSelect() {
               ← Quay Lại
             </button>
 
-            <Box className="step-dots" style={{ marginTop: 24 }}>
+            <Box className="step-dots" style={{ marginTop: 18 }}>
               <Box className="step-dot done" />
               <Box className="step-dot active" />
               <Box className="step-dot" />

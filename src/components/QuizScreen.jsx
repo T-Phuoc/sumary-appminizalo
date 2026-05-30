@@ -111,10 +111,10 @@ function QuizScreen() {
         ))}
       </div>
 
-      <Box style={{ position: "relative", zIndex: 10, padding: "env(safe-area-inset-top) 20px 20px", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+      <Box style={{ position: "relative", zIndex: 10, padding: "env(safe-area-inset-top) 14px 16px", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         
         {/* Badge tiêu đề */}
-        <Box className="anim-fade-down badge-deep-sea pulse-slow shine-effect" style={{ marginBottom: 20, borderRadius: 50, padding: "12px 28px", background: "linear-gradient(135deg, #01579b, #00acc1, #01579b)", backgroundSize: '200% auto', border: "3px solid #01579b", boxShadow: "0 10px 25px rgba(0, 172, 193, 0.5)", animation: 'shine-btn 3s linear infinite' }}>
+        <Box className="anim-fade-down badge-deep-sea pulse-slow shine-effect" style={{ marginBottom: 16, borderRadius: 50, padding: "10px 22px", background: "linear-gradient(135deg, #01579b, #00acc1, #01579b)", backgroundSize: '200% auto', border: "3px solid #01579b", boxShadow: "0 10px 25px rgba(0, 172, 193, 0.5)", animation: 'shine-btn 3s linear infinite' }}>
           <Text style={{ fontSize: 13, fontWeight: 900, color: "#fff", letterSpacing: "1.5px", textTransform: 'uppercase' }}>
             {countryConfigs[selectedCountry]?.name} • {selectedVisaType === "study" ? "DU HỌC" : "DU LỊCH"}
           </Text>
@@ -124,7 +124,7 @@ function QuizScreen() {
         <Box
           className={`app-card card-deep-sea ${slideDir === "out" ? "quiz-slide-out" : "quiz-slide-in"}`}
           style={{
-            padding: "35px 24px",
+            padding: "26px 20px",
             width: "100%",
             maxWidth: 420,
             height: 650, 
@@ -141,8 +141,8 @@ function QuizScreen() {
           }}
         >
           {/* Thanh Tiến Trình Neon */}
-          <Box style={{ marginBottom: 25 }}>
-            <Box style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+          <Box style={{ marginBottom: 18 }}>
+            <Box style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
               <Text style={{ fontSize: 12, fontWeight: 900, color: "#01579b" }}>CÂU HỎI {qIdx + 1}/{questions.length}</Text>
               <Text style={{ fontSize: 14, fontWeight: 900, color: "#00acc1" }}>{Math.round(progress)}%</Text>
             </Box>
@@ -153,7 +153,7 @@ function QuizScreen() {
 
           <Box style={{ flex: 1, display: "flex", flexDirection: "column" }}>
             {/* Câu hỏi */}
-            <Box style={{ height: 110, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+            <Box style={{ height: 96, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
               <Text style={{ fontSize: 22, fontWeight: 900, color: "#01579b", textAlign: "center", lineHeight: 1.4, textShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
                 {q.question || q.title}
               </Text>
@@ -173,7 +173,7 @@ function QuizScreen() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "16px 20px",
+                      padding: "14px 18px",
                       borderRadius: 26,
                       border: `3px solid ${isActive ? colorTheme.main : "rgba(1, 87, 155, 0.1)"}`,
                       background: isActive ? "#fff" : "rgba(255, 255, 255, 0.85)",
@@ -202,7 +202,7 @@ function QuizScreen() {
                     </Box>
 
                     <Text style={{ 
-                        marginLeft: 18, fontWeight: 800, 
+                        marginLeft: 14, fontWeight: 800, 
                         color: isActive ? colorTheme.main : "#37474f", 
                         fontSize: 15, flex: 1, lineHeight: 1.2 
                     }}>

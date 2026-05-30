@@ -9,22 +9,28 @@ const Quiz2_2Page = () => {
   const navigate = useNavigate();
 
   // --- States cho Hệ đào tạo ---
-  const [eduSystem, setEduSystem] = useFormState("eduSystem", "");
-  const [isEduOpen, setIsEduOpen] = useFormState("isEduOpen", false);
+  const [eduSystem, setEduSystem] = useFormState("q2_2_eduSystem", "");
+  const [isEduOpen, setIsEduOpen] = useFormState("q2_2_isEduOpen", false);
   const eduOptions = ["Cao đẳng", "Đại học", "Trung cấp nghề", "Khác"];
 
   // --- States cho Ngành học ---
-  const [major, setMajor] = useFormState("major", "");
-  const [isMajorOpen, setIsMajorOpen] = useFormState("isMajorOpen", false);
+  const [major, setMajor] = useFormState("q2_2_major", "");
+  const [isMajorOpen, setIsMajorOpen] = useFormState("q2_2_isMajorOpen", false);
   const majorOptions = ["Kinh tế", "Công nghệ thông tin (IT)", "Điện - Điện tử", "Du lịch - Khách sạn", "Ngôn ngữ", "Khác"];
 
   // State Modal xác nhận
-  const [isConfirmVisible, setIsConfirmVisible] = useFormState("isConfirmVisible", false);
+  const [isConfirmVisible, setIsConfirmVisible] = useFormState("q2_2_isConfirmVisible", false);
 
   // Xử lý Ghi nhận
   const handleRecord = () => {
-    if (!eduSystem || !major) {
-      alert("Vui lòng nhập/chọn đầy đủ Hệ đào tạo và Ngành học!");
+    const normalizedEduSystem = String(eduSystem || "").trim();
+    const normalizedMajor = String(major || "").trim();
+
+    if (!normalizedEduSystem || !normalizedMajor) {
+      const missingFields = [];
+      if (!normalizedEduSystem) missingFields.push("Hệ đào tạo");
+      if (!normalizedMajor) missingFields.push("Ngành học");
+      alert(`Vui lòng nhập/chọn đầy đủ: ${missingFields.join(" và ")}!`);
       return;
     }
     setIsConfirmVisible(true);
@@ -35,6 +41,8 @@ const Quiz2_2Page = () => {
 
     // Cập nhật giá trị tên để tránh bị Apps Script gán là "Khách Game"
     const finalName = globalFormMemory["q1_name"] || "Khách Khảo Sát";
+    const normalizedEduSystem = String(eduSystem || "").trim();
+    const normalizedMajor = String(major || "").trim();
 
     // 1. Gom toàn bộ dữ liệu từ các bước trước - ĐÃ CHUẨN HÓA KEY CHO APPS SCRIPT
     const payload = {
@@ -48,8 +56,11 @@ const Quiz2_2Page = () => {
       className: globalFormMemory["q1_class"] || "N/A",
       selectedBlock: globalFormMemory["selectedBlock"] || "N/A",
       pathway: "Trong nước",              // Key quan trọng để Apps Script nhận diện isKhaoSatHito
-      eduSystem: eduSystem,
-      major: major,
+      eduSystem: normalizedEduSystem,
+      educationLevel: normalizedEduSystem,
+      trainingSystem: normalizedEduSystem,
+      heDaoTao: normalizedEduSystem,
+      major: normalizedMajor,
       phone: globalFormMemory["user_phone"] || "0912345678",
       studyCountry: "Việt Nam"             // Khớp với cột 'Quốc gia' trong Apps Script
     };
@@ -66,8 +77,20 @@ const Quiz2_2Page = () => {
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
+      const responseText = await response.text();
+      let result = {};
+      try {
+        result = responseText ? JSON.parse(responseText) : {};
+      } catch (parseError) {
+        console.error("❌ [Quiz2_2] Response không phải JSON:", responseText);
+        result = { message: responseText || "Backend trả về phản hồi không hợp lệ" };
+      }
       console.log("📥 [Quiz2_2] Response từ server:", result);
+
+      if (!response.ok) {
+        alert(`Backend trả lỗi ${response.status}: ${result.message || responseText || "Không thể lưu dữ liệu"}`);
+        return;
+      }
 
       // Apps Script trả về thành công qua biến success hoặc result
       if (result.success || result.result === "success") {
@@ -219,6 +242,7 @@ const Quiz2_2Page = () => {
 
               {/* Nút Ghi nhận */}
               <button
+                type="button"
                 onClick={handleRecord}
                 className="w-full py-4 bg-[#003570] text-white text-lg font-bold rounded-2xl shadow-xl active:scale-95 transition-all mt-2 relative z-10"
               >
@@ -261,12 +285,14 @@ const Quiz2_2Page = () => {
         </div>
         <div className="flex gap-3">
           <button
+            type="button"
             className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
             onClick={() => setIsConfirmVisible(false)}
           >
             Hủy
           </button>
           <button
+            type="button"
             className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform"
             onClick={handleConfirm}
           >

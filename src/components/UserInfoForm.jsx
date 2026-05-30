@@ -126,23 +126,23 @@ function UserInfoForm() {
     <Page style={{ position: "relative", overflow: "hidden", background: "#e0f7fa" }}>
       <OceanBackground />
       
-      <Box style={{ position: "relative", zIndex: 10, padding: "40px 16px", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Box style={{ position: "relative", zIndex: 10, padding: "28px 14px", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Box style={{ position: "relative", width: "100%", maxWidth: 420 }}>
           
           <Box style={{ position: "absolute", top: -80, right: -10, width: 120, height: 120, zIndex: 15, animation: "fish-float 3s ease-in-out infinite" }}>
             <img src={FISH_HTO_URL} style={{ width: "100%", objectFit: "contain" }} />
           </Box>
 
-          <Box className="app-card" style={{ padding: '32px 20px', borderRadius: 45, background: 'rgba(255,255,255,0.95)', border: "3px solid #01579b", backdropFilter: "blur(10px)" }}>
+          <Box className="app-card" style={{ padding: '24px 16px', borderRadius: 45, background: 'rgba(255,255,255,0.95)', border: "3px solid #01579b", backdropFilter: "blur(10px)" }}>
             
-            <Box style={{ textAlign: "center", marginBottom: 24 }}>
-              <Box style={{ display: "inline-block", background: "#01579b", padding: "6px 20px", borderRadius: 20, marginBottom: 10 }}>
+            <Box style={{ textAlign: "center", marginBottom: 18 }}>
+              <Box style={{ display: "inline-block", background: "#01579b", padding: "6px 20px", borderRadius: 20, marginBottom: 8 }}>
                 <Text style={{ fontSize: 11, fontWeight: 900, color: "#fff", letterSpacing: "1px" }}>HỒ SƠ THÀNH VIÊN</Text>
               </Box>
               <Text style={{ fontSize: 28, fontWeight: 900, color: "#01579b" }}>Thông Tin Cá Nhân</Text>
             </Box>
 
-            <Box style={{ display: "flex", alignItems: "center", gap: 14, background: "#f0f9ff", borderRadius: 24, padding: "14px", border: "1px solid #bae6fd", marginBottom: 24 }}>
+            <Box style={{ display: "flex", alignItems: "center", gap: 12, background: "#f0f9ff", borderRadius: 24, padding: "12px", border: "1px solid #bae6fd", marginBottom: 18 }}>
               <img src={zaloData.avatar || "https://via.placeholder.com/150"} style={{ width: 60, height: 60, borderRadius: 20, border: "2px solid #fff", objectFit: "cover" }} />
               <Box>
                 <Text style={{ fontSize: 18, fontWeight: 900, color: "#01579b" }}>{zaloData.name || "Khách hàng"}</Text>
@@ -150,7 +150,7 @@ function UserInfoForm() {
               </Box>
             </Box>
 
-            <Box style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 24 }}>
+            <Box style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 18 }}>
               {fields.map((f) => (
                 <Box key={f.name}>
                   <Box style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, paddingLeft: 6 }}>
@@ -174,7 +174,7 @@ function UserInfoForm() {
 
             <Box 
               onClick={() => { setAgreed(!agreed); setErrors(p => ({...p, agreed: ""})) }}
-              style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px", borderRadius: 20, background: agreed ? "#f0fdf4" : "#f8fafc", border: `1.5px solid ${agreed ? "#86efac" : "#e2e8f0"}`, cursor: "pointer", marginBottom: 24 }}
+              style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px", borderRadius: 20, background: agreed ? "#f0fdf4" : "#f8fafc", border: `1.5px solid ${agreed ? "#86efac" : "#e2e8f0"}`, cursor: "pointer", marginBottom: 18 }}
             >
               <Box style={{ width: 24, height: 24, borderRadius: 8, border: `2px solid ${agreed ? "#10b981" : "#cbd5e1"}`, background: agreed ? "#10b981" : "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {agreed && <Text style={{ color: "#fff", fontSize: 14, fontWeight: 900 }}>✓</Text>}
@@ -183,8 +183,8 @@ function UserInfoForm() {
             </Box>
 
             <Box style={{ display: "flex", gap: 12 }}>
-              <button onClick={() => setStep("start")} style={{ flex: 1, padding: "16px", borderRadius: 18, border: "none", background: "#f1f5f9", color: "#475569", fontWeight: 800 }}>QUAY LẠI</button>
-              <button onClick={handleSubmit} style={{ flex: 2, padding: "16px", borderRadius: 18, border: "none", background: agreed ? "linear-gradient(90deg, #01579b, #00acc1)" : "#cbd5e1", color: "#fff", fontWeight: 800, transition: "0.3s" }}>TIẾP TỤC →</button>
+              <button onClick={() => setStep("start")} style={{ flex: 1, padding: "14px", borderRadius: 18, border: "none", background: "#f1f5f9", color: "#475569", fontWeight: 800 }}>QUAY LẠI</button>
+              <button onClick={handleSubmit} style={{ flex: 2, padding: "14px", borderRadius: 18, border: "none", background: agreed ? "linear-gradient(90deg, #01579b, #00acc1)" : "#cbd5e1", color: "#fff", fontWeight: 800, transition: "0.3s" }}>TIẾP TỤC →</button>
             </Box>
           </Box>
         </Box>

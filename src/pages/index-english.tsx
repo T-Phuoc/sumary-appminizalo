@@ -134,6 +134,8 @@ const HomePageEnglish = () => {
 
   const handleBackToResult = () => setCurrentScreen('result');
 
+  const handleBackToExplore = () => setCurrentScreen('welcome');
+
   const openMessenger = () => {
     openWebview({
       url: "https://m.me/100083047195100",
@@ -163,7 +165,7 @@ const HomePageEnglish = () => {
             <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center justify-center py-4 sm:max-w-lg sm:py-6">
               
               {currentScreen === 'welcome' && (
-                <Welcome onStart={handleStart} />
+                <Welcome onStart={handleStart} onBackToExplore={handleBackToExplore} />
               )}
               
               {currentScreen === 'form' && (
@@ -178,7 +180,7 @@ const HomePageEnglish = () => {
                   <LanguageSelect onSelect={handleLanguageSelect} />
                   <button 
                     onClick={handleResetInfo}
-                    className="mt-5 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold text-white/70 shadow-sm backdrop-blur-md transition-colors hover:bg-white/15 hover:text-white"
+                    className="mt- rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white/70 shadow-sm backdrop-blur-md transition-colors hover:bg-white/15 hover:text-white"
                   >
                     (Nhập lại thông tin cá nhân)
                   </button>

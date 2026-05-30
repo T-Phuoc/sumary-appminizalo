@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'zmp-ui';
 import { getPhoneNumber, getAccessToken, getUserInfo, followOA } from "zmp-sdk/apis";
 import { appConfig } from '../public/models/DataModel';
 
@@ -11,9 +12,19 @@ const HITO_STICKERS = [
   { id: 2, src: "https://i.ibb.co/Bp593Dq/sticker-hito-11-removebg-preview.png", className: "absolute top-10 right-2 w-14 h-14 md:w-16 md:h-16 animate-pulse rotate-[15deg]" },
 ];
 
-const Welcome = ({ onStart }) => {
+const Welcome = ({ onStart, onBackToExplore }) => {
   const [showTerms, setShowTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleBackToExplore = () => {
+    if (onBackToExplore) {
+      onBackToExplore();
+      return;
+    }
+
+    navigate('/more');
+  };
 
   const handleMainStartClick = async () => {
     console.log("[ZaloSDK] Bắt đầu gọi API followOA - Chuẩn bị hiển thị menu/popup OA...");
@@ -225,6 +236,13 @@ const Welcome = ({ onStart }) => {
                 <span>{appConfig.start_button_text}</span>
                 <img src="https://i.ibb.co/fG98Gd8F/sticker-hito-02-removebg-preview.png" alt="Hito" className="w-8 h-8 transition-transform duration-300 md:w-10 md:h-10 group-hover:translate-x-2 group-hover:-translate-y-1" />
               </span>
+            </button>
+
+            <button
+              onClick={handleBackToExplore}
+              className="mt-3 w-full py-3 text-sm font-bold text-white/90 transition-all duration-300 border border-white/20 rounded-2xl bg-white/10 backdrop-blur-md hover:bg-white/15 active:scale-95"
+            >
+              Quay lại khám phá
             </button>
           </div>
         </div>

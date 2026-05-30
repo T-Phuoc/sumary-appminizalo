@@ -3,19 +3,36 @@ import React from "react";
 type ProductSelectionScreenProps = {
   onOpenFutureMap?: () => void;
   onOpenNumerology?: () => void;
+  onBackToExplore?: () => void;
 };
 
 const ProductSelectionScreen: React.FC<ProductSelectionScreenProps> = ({
   onOpenFutureMap,
   onOpenNumerology,
+  onBackToExplore,
 }) => {
   return (
-    <div className="font-quicksand relative flex min-h-screen w-full flex-col overflow-y-auto bg-gradient-to-b from-[#061120] via-[#102a56] to-[#0f7db7] px-5 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]">
-      <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20" />
+    <div className="font-quicksand relative flex min-h-screen w-full flex-col overflow-y-auto bg-gradient-to-b from-[#061120] via-[#102a56] to-[#0f7db7] px-3 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]">
+      <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10" />
       <div className="pointer-events-none absolute left-1/2 top-16 h-56 w-56 -translate-x-1/2 rounded-full bg-cyan-400/20 blur-[90px]" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-8">
-        <div className="mb-8 text-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-2">
+        {onBackToExplore && (
+          <div className="mb-4 flex justify-start">
+            <button
+              type="button"
+              onClick={onBackToExplore}
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-white backdrop-blur-xl transition-transform active:scale-95"
+            >
+              <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7" />
+              </svg>
+              Quay lại khám phá
+            </button>
+          </div>
+        )}
+
+        <div className="mb-4 text-center">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[28px] border border-white/20 bg-white/10 shadow-[0_0_30px_rgba(14,165,233,0.25)] backdrop-blur-xl">
             <img
               src="https://res.cloudinary.com/djyq3kmgb/image/upload/v1771898961/Logo_HTO_GROUPpng-02_2_fpe7wl.png"
@@ -24,15 +41,15 @@ const ProductSelectionScreen: React.FC<ProductSelectionScreenProps> = ({
             />
           </div>
 
-          <h1 className="mt-5 bg-gradient-to-r from-cyan-200 via-white to-blue-100 bg-clip-text text-3xl font-extrabold uppercase tracking-[0.24em] text-transparent">
-            HTO Holland
+          <h1 className="mt-3 bg-gradient-to-r from-cyan-200 via-white to-blue-100 bg-clip-text text-3xl font-extrabold uppercase tracking-[0.2em] text-transparent">
+            KHÁM PHÁ BẢN THÂN
           </h1>
-          <p className="mt-2 text-sm font-medium leading-relaxed text-blue-100/90">
+          <p className="mt-1 text-sm font-medium leading-relaxed text-blue-100/90">
             Bạn sẽ làm nghề gì? Con số nào đang chi phối cuộc đời bạn? Khám phá ngay!
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <button
             type="button"
             onClick={onOpenFutureMap}

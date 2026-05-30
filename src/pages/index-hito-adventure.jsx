@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { Box, Button, Icon, Page, Text, Modal } from "zmp-ui";
+﻿import React, { useState } from "react";
+import { Box, Button, Page, Text, Modal } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
-// TRỈNH: Import đầy đủ các API cần thiết của Zalo
-import { followOA, authorize, getUserInfo, getPhoneNumber, getAccessToken } from "zmp-sdk/apis"; 
-
+import { globalFormMemory } from "../hooks/useFormState";
 import "../css/home-style.css";
 import bgMain from "../assets/bg_main.png";
 import mascot from "../assets/mascot-CdQs06Pp.png";
@@ -15,63 +13,63 @@ function HomePageAdventure() {
   const navigate = useNavigate();
   const [showGuide, setShowGuide] = useState(false);
 
-  // Logic xử lý khi nhấn nút Chơi Ngay
-const handlePlayNow = async (target = "/game") => {
-    // TRỈNH: Lưu trang đích ngay lập tức để UserInfo biết chuyển hướng đi đâu, kể cả khi lỗi API
-    localStorage.setItem("hito_target_page", target);
+  // Hàm xây dựng dữ liệu người chơi dựa trên quiz và fallback từ Zalo SDK
+  const buildPlayerData = (target) => {
+    // Lưu dữ liệu quiz đã có vào localStorage để sử dụng trong game
+    const savedQuizData = {
+      name: globalFormMemory["q1_name"] || "",
+      full_name: globalFormMemory["q1_name"] || "",
+      email: globalFormMemory["q1_email"] || "",
+      gender: globalFormMemory["q1_gender"] || "",
+      province: globalFormMemory["q1_province"] || "",
+      school: globalFormMemory["q1_school"] || "",
+      className: globalFormMemory["q1_class"] || "",
+      selectedBlock: globalFormMemory["selectedBlock"] || "",
+      phone: globalFormMemory["user_phone"] || "",
+      birthday: globalFormMemory["birthday"] || "01/01/2000",
+    };
 
+    let fallbackZaloData = {};
     try {
-      await followOA({ id: "2112176407138597287" });
-      await authorize({ scopes: ["scope.userInfo", "scope.userPhonenumber"] });
-      const { userInfo } = await getUserInfo({});
-      
-      const phoneRes = await getPhoneNumber({});
-      const accessToken = await getAccessToken({});
-      
-      // LOG KIỂM TRA ĐẦU VÀO
-      console.log("---------- [FE DEBUG] ----------");
-      console.log("Token SĐT:", phoneRes.token);
-      console.log("AccessToken:", accessToken ? "Đã lấy được" : "Chưa có");
-
-      let phoneNumber = "";
-
-      // CHỈ FETCH KHI CÓ TOKEN (Tránh lỗi undefined gửi lên BE)
-      if (phoneRes.token && accessToken) {
-        //http://localhost:9000/get-phone-new
-        const response = await fetch("https://api.hto.edu.vn/get-phone-new", {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accessToken, code: phoneRes.token }),
-        });
-
-        const result = await response.json();
-        
-        // LOG DỮ LIỆU TRẢ VỀ TỪ BACKEND
-        console.log("Dữ liệu nhận được từ BE:", result);
-
-        if (result.success && result.phone) {
-          phoneNumber = result.phone.replace(/\D/g, '').replace(/^84/, '0');
-        } 
-        else if (result.data && result.data.number) {
-          phoneNumber = result.data.number.replace(/\D/g, '').replace(/^84/, '0');
-        }
-      } else {
-        console.warn("⚠️ Không lấy được Token từ Zalo. Kiểm tra thiết bị test hoặc quyền App!");
-      }
-
-      console.log("SĐT cuối cùng lưu vào LocalStorage:", phoneNumber);
-
-      localStorage.setItem("hito_zalo_data", JSON.stringify({
-        name: userInfo?.name || "Khách hàng",
-        phone: phoneNumber || ""
-      }));
-
-      navigate("/user-info");
-    } catch (e) {
-      console.error("🔥 Lỗi luồng xử lý:", e);
-      // Dù lỗi vẫn cho qua trang điền thông tin
-      navigate("/user-info");
+      fallbackZaloData = JSON.parse(localStorage.getItem("hito_zalo_data") || "{}");
+    } catch {
+      fallbackZaloData = {};
     }
+
+    const playerData = {
+      ...savedQuizData,
+      name: savedQuizData.name || fallbackZaloData.name || "Khách hàng",
+      full_name: savedQuizData.full_name || fallbackZaloData.name || "Khách hàng",
+      phone: savedQuizData.phone || fallbackZaloData.phone || "",
+      email: savedQuizData.email || fallbackZaloData.email || "",
+      birthday: savedQuizData.birthday || fallbackZaloData.birthday || "01/01/2000",
+      target_page: target,
+      form_type: target === "/lucky-spin" ? "Lucky_Spin" : "Hito_Adventure",
+      created_at: new Date().toISOString(),
+    };
+
+    localStorage.setItem("hito_player_data", JSON.stringify(playerData));
+    localStorage.removeItem("hito_target_page");
+    return playerData;
+  };
+
+  // Hàm xử lý khi nhấn nút "Chơi Ngay"
+  const handlePlayNow = (target = "/game") => {
+    const hasQuizData = Boolean(
+      globalFormMemory["q1_name"] ||
+      globalFormMemory["q1_email"] ||
+      globalFormMemory["q1_class"] ||
+      globalFormMemory["selectedBlock"]
+    );
+
+    if (hasQuizData) {
+      buildPlayerData(target);
+      navigate(target);
+      return;
+    }
+
+    // Fallback an toàn n?u ngu?i dùng chua di?n quiz tru?c dó
+    navigate("/user-info");
   };
   return (
     <Page className="home-page-container">
@@ -95,7 +93,7 @@ const handlePlayNow = async (target = "/game") => {
         </Box>
 
         <Box className="mt-6 text-center w-full">
-          <Text className="text-[#0e4b75] font-black text-4xl uppercase tracking-tight mb-2 italic">Điểm đổi quà</Text>
+          <Text className="text-[#0e4b75] font-black text-4xl uppercase tracking-tight mb-2 italic">Tích điểm đổi quà</Text>
           <Box className="h-1 w-16 bg-[#3a9edb] mx-auto rounded-full mb-3 opacity-40" />
 
           <Box flex justifyContent="space-around" className="mb-6 items-end px-2">
@@ -105,15 +103,29 @@ const handlePlayNow = async (target = "/game") => {
           </Box>
         </Box>
 
-        <Box className="w-full flex justify-center gap-4">
-          <Button className="btn-play-now flex-1 max-w-xs" onClick={() => handlePlayNow("/game")}>vượt sóng cùng HTO</Button>
+        <Box className="w-full flex justify-center gap-4 items-stretch">
+          <Box className="relative flex-1 max-w-xs">
+            <Button className="btn-play-now w-full" onClick={() => handlePlayNow("/game")}>
+              VƯỢT SÓNG CÙNG HTO
+            </Button>
+            <Button
+              className="guide-float-btn"
+              onClick={() => setShowGuide(true)}
+              aria-label="Cách chơi"
+            >
+              <span className="guide-float-mark">!</span>
+            </Button>
+          </Box>
           <Button className="btn-lucky-spin flex-1 max-w-xs" onClick={() => handlePlayNow("/lucky-spin")}>VÒNG QUAY MAY MẮN</Button>
         </Box>
       </Box>
 
-      <Box className="home-bottom-nav">
-        <TabItem icon="zi-info-circle-solid" label="CÁCH CHƠI" onClick={() => setShowGuide(true)} />
-      </Box>
+      <Button
+        className="btn-back-explore mx-auto mt-2"
+        onClick={() => navigate("/more")}
+      >
+        QUAY LẠI KHÁM PHÁ
+      </Button>
 
       <Modal visible={showGuide} title="HƯỚNG DẪN CHƠI" onClose={() => setShowGuide(false)} verticalActions>
         <Box className="p-4">
@@ -141,13 +153,6 @@ const RewardItem = ({ img, name, pts }) => (
     <img src={img} alt={name} className="h-16 w-16 object-contain mb-2 drop-shadow-md" />
     <Text size="xxxxSmall" className="text-[#0e4b75] font-black uppercase text-center leading-tight h-8 flex items-center justify-center tracking-tight">{name}</Text>
     <Text bold size="small" className="text-[#3a9edb] mt-1 font-extrabold">{pts} điểm</Text>
-  </Box>
-);
-
-const TabItem = ({ icon, label, onClick }) => (
-  <Box flex flexDirection="column" alignItems="center" className="cursor-pointer" onClick={onClick}>
-    <Box className="tab-guide-icon-wrapper"><Icon icon={icon} size={34} className="text-white" /></Box>
-    <Text className="font-black text-[12px] mt-1.5 uppercase text-[#3a9edb] tracking-widest scale-110">{label}</Text>
   </Box>
 );
 
