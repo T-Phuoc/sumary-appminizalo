@@ -10,7 +10,15 @@ import {
 } from '../data/visaData';
 
 // Base URL for the Spring Boot backend API
-const API_BASE_URL = 'https://api.hto.edu.vn';
+const normalizeBaseUrl = (value) => {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (raw.startsWith("//")) return `https:${raw}`;
+  return raw.replace(/\/+$/, "");
+};
+
+const API_BASE_URL =
+  normalizeBaseUrl(import.meta.env?.VITE_API_URL) || 'https://survey-api.hto.edu.vn';
 
 // ==================== VISA DATA APIs (BE-first, fallback local) ====================
 
@@ -147,7 +155,7 @@ export async function decodeZaloPhone(phoneToken) {
   try {
     const { accessToken, code } = phoneToken;
     
-    // Đổi 'decode-phone' thành 'get-phone' cho khớp với Backend
+    // Ưu tiên route mới để đồng bộ với các màn đã cập nhật.
     const response = await fetch(`${API_BASE_URL}/get-phone`, { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

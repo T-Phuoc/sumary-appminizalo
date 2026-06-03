@@ -34,7 +34,7 @@ const HomePage = () => {
 
       if (token && accessToken) {
         // 2. Gửi dữ liệu lên endpoint mới: /get-phone-new
-        const response = await fetch("https://api.hto.edu.vn/get-phone-new", {
+        const response = await fetch("https://survey-api.hto.edu.vn/get-phone-new", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

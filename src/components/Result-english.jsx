@@ -3,7 +3,7 @@ import { openChat, getUserInfo } from 'zmp-sdk/apis';
 
 const Result = ({ score, analysis, onRestart, totalQuestions = 20 }) => {
   const OA_ID = "2112176407138597287"; // ID Zalo OA của HTO Group
-  const BACKEND_API_URL = "https://api.hto.edu.vn/send-oa-message";
+  const BACKEND_API_URL = "https://survey-api.hto.edu.vn/send-oa-message";
   
   // Ref để đảm bảo tin nhắn chỉ gửi tự động 1 lần duy nhất khi vào trang
   const hasAutoSent = useRef(false);

@@ -5,6 +5,21 @@ import bgMain from "../assets/bg_main.png";
 import mascot from "../assets/mascot-CdQs06Pp.png";
 
 const STORAGE_KEY = "hito_lucky_spin_state_v2";
+const DEFAULT_DAILY_SPINS = 1;
+const DEBUG_SPINS_QUERY_KEY = "spins";
+
+function getInitialSpinCount() {
+  if (typeof window === "undefined") {
+    return DEFAULT_DAILY_SPINS;
+  }
+
+  const queryValue = Number(new URLSearchParams(window.location.search).get(DEBUG_SPINS_QUERY_KEY));
+  if (Number.isFinite(queryValue) && queryValue > 0) {
+    return queryValue;
+  }
+
+  return DEFAULT_DAILY_SPINS;
+}
 
 const PRIZES = [
   {
@@ -273,7 +288,7 @@ function readSpinState() {
   if (typeof window === "undefined") {
     return {
       dateKey: getTodayKey(),
-      remainingSpins: 1,
+      remainingSpins: DEFAULT_DAILY_SPINS,
       bonusShareUsed: false,
       bonusCheckInUsed: false,
       bonusQuizUsed: false,
@@ -285,7 +300,7 @@ function readSpinState() {
     if (!raw) {
       return {
         dateKey: getTodayKey(),
-        remainingSpins: 1,
+        remainingSpins: getInitialSpinCount(),
         bonusShareUsed: false,
         bonusCheckInUsed: false,
         bonusQuizUsed: false,
@@ -296,7 +311,7 @@ function readSpinState() {
     if (parsed?.dateKey !== getTodayKey()) {
       return {
         dateKey: getTodayKey(),
-        remainingSpins: 1,
+        remainingSpins: getInitialSpinCount(),
         bonusShareUsed: false,
         bonusCheckInUsed: false,
         bonusQuizUsed: false,
@@ -305,7 +320,7 @@ function readSpinState() {
 
     return {
       dateKey: parsed.dateKey,
-      remainingSpins: Number.isFinite(parsed.remainingSpins) ? parsed.remainingSpins : 1,
+      remainingSpins: Number.isFinite(parsed.remainingSpins) ? parsed.remainingSpins : getInitialSpinCount(),
       bonusShareUsed: Boolean(parsed.bonusShareUsed),
       bonusCheckInUsed: Boolean(parsed.bonusCheckInUsed),
       bonusQuizUsed: Boolean(parsed.bonusQuizUsed),
@@ -313,7 +328,7 @@ function readSpinState() {
   } catch {
     return {
       dateKey: getTodayKey(),
-      remainingSpins: 1,
+      remainingSpins: getInitialSpinCount(),
       bonusShareUsed: false,
       bonusCheckInUsed: false,
       bonusQuizUsed: false,
@@ -357,6 +372,7 @@ function LuckySpinPage() {
 
   const remainingLabel =
     wheelState.remainingSpins > 0 ? `${wheelState.remainingSpins} lượt` : "Hết lượt";
+  const isDev = import.meta.env.DEV;
 
   const handleAddBonus = (type) => {
     if (spinning) return;
@@ -430,8 +446,22 @@ function LuckySpinPage() {
     setResultVisible(false);
   };
 
+  const addTestSpins = (count = 5) => {
+    if (spinning) return;
+
+    setWheelState((prev) => ({
+      ...prev,
+      remainingSpins: prev.remainingSpins + count,
+    }));
+    setBonusMessage(`Đã cộng thêm ${count} lượt test.`);
+    setInfoVisible(true);
+  };
+
   return (
-    <Page className="relative min-h-screen overflow-hidden bg-[#dff2ff]">
+    <Page
+      className="relative min-h-[100dvh] overflow-y-auto overflow-x-hidden bg-[#dff2ff]"
+      style={{ WebkitOverflowScrolling: "touch" }}
+    >
       <img
         src={bgMain}
         alt=""
@@ -441,7 +471,7 @@ function LuckySpinPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),rgba(223,242,255,0.72)_35%,rgba(12,74,110,0.2)_100%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.35)_0%,rgba(255,255,255,0)_30%,rgba(7,89,133,0.08)_100%)]" />
 
-      <Box className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-5 pb-10 sm:px-6 lg:px-8">
+      <Box className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col px-4 py-5 pb-24 sm:px-6 lg:px-8">
         <Box className="mb-5 flex flex-col gap-3 rounded-[28px] border border-white/70 bg-white/75 px-4 py-4 shadow-[0_24px_80px_rgba(15,118,110,0.15)] backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Box>
             <Text className="text-xs font-extrabold uppercase tracking-[0.35em] text-[#0f766e]">
@@ -451,20 +481,28 @@ function LuckySpinPage() {
               Quay vui mỗi ngày - nhận quà tương lai
             </Text>
             <Text className="mt-2 max-w-2xl text-sm font-medium text-[#27536b] sm:text-base">
-              Trang quay số được thiết kế như một thế giới HITO: vui, gần gũi, có cảm xúc,
-              và vẫn dẫn được người chơi tới trải nghiệm thật.
+              Vui, gần gũi, có cảm xúc và vẫn dẫn được người chơi tới trải nghiệm thật.
             </Text>
           </Box>
 
-          <Box className="flex shrink-0 flex-col gap-2 rounded-2xl bg-[#0e4b75] px-4 py-3 text-white shadow-lg">
-            <Text className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-100">
-              Lượt hôm nay
-            </Text>
-            <Text className="text-3xl font-black leading-none">{remainingLabel}</Text>
-            <Text className="text-xs font-medium text-cyan-100">
-              Dùng hết lượt rồi thì nhận bonus từ share, check-in hoặc quiz.
-            </Text>
-          </Box>
+              <Box className="flex shrink-0 flex-col gap-2 rounded-2xl bg-[#0e4b75] px-4 py-3 text-white shadow-lg">
+                <Text className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-100">
+                  Lượt hôm nay
+                </Text>
+                <Text className="text-3xl font-black leading-none">{remainingLabel}</Text>
+                <Text className="text-xs font-medium text-cyan-100">
+                  Dùng hết lượt rồi thì nhận bonus từ share, check-in hoặc quiz.
+                </Text>
+                {isDev && (
+                  <Button
+                    size="small"
+                    className="mt-1 rounded-full border-0 bg-white/15 text-xs font-bold text-white hover:bg-white/25"
+                    onClick={() => addTestSpins(5)}
+                  >
+                    +5 lượt test
+                  </Button>
+                )}
+              </Box>
         </Box>
 
         <Box className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
@@ -532,19 +570,6 @@ function LuckySpinPage() {
               </Box>
 
               <Box className="space-y-4">
-                <Box className="rounded-[24px] border border-[#d7edf7] bg-[#f6fbfe] p-4">
-                  <Text className="text-xs font-extrabold uppercase tracking-[0.32em] text-[#0f766e]">
-                    Cấu trúc 20 ô đã tối ưu
-                  </Text>
-                  <Text className="mt-2 text-lg font-black text-[#0e4b75]">
-                    Wheel được chia thành 4 lớp mục tiêu: dễ trúng, chuyển đổi, emotional và event.
-                  </Text>
-                  <Text className="mt-2 text-sm leading-6 text-[#335c72]">
-                    Mục tiêu là để người chơi thấy mình đang bước vào thế giới HITO, không phải
-                    một bảng khuyến mãi. Mỗi ô đều có câu chuyện và cảm giác nhận quà riêng.
-                  </Text>
-                </Box>
-
                 <Box className="grid gap-3 sm:grid-cols-2">
                   <InfoChip label="Daily Spin" value="1 lượt miễn phí / ngày" color="#38bdf8" />
                   <InfoChip label="Share Bonus" value="Chia sẻ để thêm lượt" color="#22c55e" />
@@ -593,14 +618,14 @@ function LuckySpinPage() {
               </Box>
 
               <Box className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                <ActionButton
+                {/* <ActionButton
                   title="Share Bonus"
                   description="Share một lần để thêm 1 lượt quay."
                   buttonText={wheelState.bonusShareUsed ? "Đã nhận" : "Nhận bonus"}
                   onPress={() => handleAddBonus("share")}
                   disabled={wheelState.bonusShareUsed || spinning}
                   tone="share"
-                />
+                /> */}
                 <ActionButton
                   title="Check-in 7 ngày"
                   description="Tích lũy đều đặn để chạm tới quà lớn."
@@ -627,7 +652,7 @@ function LuckySpinPage() {
               </Button>
             </Box>
 
-            <Box className="rounded-[28px] border border-white/70 bg-white/80 p-4 shadow-[0_24px_60px_rgba(15,118,110,0.14)] backdrop-blur-md sm:p-5">
+            {/* <Box className="rounded-[28px] border border-white/70 bg-white/80 p-4 shadow-[0_24px_60px_rgba(15,118,110,0.14)] backdrop-blur-md sm:p-5">
               <Text className="text-xs font-extrabold uppercase tracking-[0.32em] text-[#0f766e]">
                 4 nhóm quà chiến lược
               </Text>
@@ -660,7 +685,7 @@ function LuckySpinPage() {
                   </div>
                 ))}
               </Box>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
 
@@ -717,19 +742,9 @@ function LuckySpinPage() {
             </Box>
           </Box>
 
-          <Box className="mt-4 rounded-[24px] bg-[#0e4b75] p-4 text-white">
-            <Text className="text-sm font-bold uppercase tracking-[0.24em] text-cyan-100">
-              Gợi ý tiếp theo
-            </Text>
-            <Text className="mt-2 text-base font-semibold leading-6">
-              Với các ô như tư vấn, học thử, giảm học phí hoặc workshop, hãy dẫn người chơi sang
-              form đăng ký để biến niềm vui thành lead chất lượng.
-            </Text>
-          </Box>
-
           <Button
             fullWidth
-            className="mt-5 h-12 rounded-full bg-[#0e4b75] font-extrabold text-white"
+            className="mt-5 h-15 rounded-full bg-[#0e4b75] font-extrabold text-white"
             onClick={handleCloseResult}
           >
             TIẾP TỤC CHƠI
@@ -742,7 +757,7 @@ function LuckySpinPage() {
           <Text className="text-base font-semibold leading-7 text-[#335c72]">{bonusMessage}</Text>
           <Button
             fullWidth
-            className="mt-5 h-12 rounded-full bg-[#0e4b75] font-extrabold text-white"
+            className="mt-5 h-15 rounded-full bg-[#0e4b75] font-extrabold text-white"
             onClick={() => setInfoVisible(false)}
           >
             ĐÃ HIỂU

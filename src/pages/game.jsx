@@ -19,32 +19,36 @@ const GamePage = () => {
   const [isScoring, setIsScoring] = useState(false);
 
   // Cấu hình vật lý & thông số Game
-  const GRAVITY = 0.4;
-  const JUMP_STRENGTH = -12;
+  // Giảm nhịp vật lý để nhân vật bay và rơi mượt hơn.
+  const GRAVITY = 0.2;
+  const JUMP_STRENGTH = -9;
   const PIPE_WIDTH = 150;
-  const BASE_PIPE_SPEED = 5;
+  const BASE_PIPE_SPEED = 2.4;
   const FISH_SIZE = 135;
-  const PIPE_SPACING = 650;
+  const PIPE_SPACING = 760;
   const HITBOX_PADDING = 55;
   const GROUND_HEIGHT = -10;
+  const GAME_SPEED_MULTIPLIER = 0.62;
+  const MAX_FALL_SPEED = 5.2;
+  const MAX_JUMPS = 2;
   const DIFFICULTY = {
     BASE_SPEED: BASE_PIPE_SPEED,
-    MAX_SPEED: 8.5,
+    MAX_SPEED: 6.2,
     BASE_SPACING: PIPE_SPACING,
-    MIN_SPACING: 420,
+    MIN_SPACING: 540,
     SCORE_STEP: 5,
-    TIME_STEP_MS: 15000,
-    SPEED_STEP: 0.35,
-    SPACING_STEP: 10,
-    PEAK_INTERVAL: 10,
-    PEAK_DURATION: 1000,
-    PEAK_SPEED_BONUS: 0.9,
-    PEAK_SPACING_PENALTY: 60,
+    TIME_STEP_MS: 22000,
+    SPEED_STEP: 0.2,
+    SPACING_STEP: 7,
+    PEAK_INTERVAL: 14,
+    PEAK_DURATION: 650,
+    PEAK_SPEED_BONUS: 0.35,
+    PEAK_SPACING_PENALTY: 20,
     SPACING_LAND_BUFFER_FRAMES: 12,
     PIPE_MIN_HEIGHT: 70,
     PIPE_MAX_HEIGHT_HARD_CAP: 170,
-    PIPE_MAX_GROWTH_PER_LEVEL: 4,
-    PIPE_MIN_GROWTH_PER_LEVEL: 1.5,
+    PIPE_MAX_GROWTH_PER_LEVEL: 2.2,
+    PIPE_MIN_GROWTH_PER_LEVEL: 0.9,
     PIPE_SAFETY_MARGIN: 15
   };
 
@@ -59,6 +63,7 @@ const GamePage = () => {
   const startTime = useRef(0);
   const peakUntil = useRef(0);
   const lastPeakScore = useRef(0);
+  const jumpCount = useRef(0);
 
   const getDifficultyState = (scoreValue, elapsedMs, now) => {
     const levelFromScore = Math.floor(scoreValue / DIFFICULTY.SCORE_STEP);
@@ -129,20 +134,25 @@ const GamePage = () => {
     startTime.current = performance.now();
     peakUntil.current = 0;
     lastPeakScore.current = 0;
+    jumpCount.current = 0;
   };
 
   const jump = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    if (gameState !== "PLAYING" || jumpCount.current >= MAX_JUMPS) return;
+
     const groundY = canvas.height - GROUND_HEIGHT - FISH_SIZE + 10;
-    if (gameState === "PLAYING" && Math.abs(fishY.current - groundY) < 15) {
-      fishVelocity.current = JUMP_STRENGTH;
-      for(let i=0; i<8; i++) {
-        particles.current.push({
-          x: 100 + FISH_SIZE/2, y: groundY + FISH_SIZE - 20,
-          vx: Math.random() * 4 - 2, vy: Math.random() * -4 - 2, life: 1.0
-        });
-      }
+    const isSecondJump = jumpCount.current === 1;
+
+    fishVelocity.current = isSecondJump ? JUMP_STRENGTH * 0.92 : JUMP_STRENGTH;
+    jumpCount.current += 1;
+
+    for(let i=0; i<8; i++) {
+      particles.current.push({
+        x: 100 + FISH_SIZE/2, y: groundY + FISH_SIZE - 20,
+        vx: Math.random() * 4 - 2, vy: Math.random() * -4 - 2, life: 1.0
+      });
     }
   };
 
@@ -162,7 +172,7 @@ const GamePage = () => {
         submitted_at: new Date().toLocaleString("vi-VN"),
       };
 
-      const BACKEND_URL = "https://api.hto.edu.vn/api/hito/submit";
+      const BACKEND_URL = "https://survey-api.hto.edu.vn/api/hito/submit";
       axios.post(BACKEND_URL, payload)
         .then(() => {
           console.log("✅ [Hito] Đã gửi data thành công từ GamePage.");
@@ -193,13 +203,18 @@ const GamePage = () => {
 
         const groundY = canvas.height - GROUND_HEIGHT - FISH_SIZE + 10;
         fishVelocity.current += GRAVITY;
+        if (fishVelocity.current > MAX_FALL_SPEED) fishVelocity.current = MAX_FALL_SPEED;
         fishY.current += fishVelocity.current;
-        if (fishY.current >= groundY) { fishY.current = groundY; fishVelocity.current = 0; }
+        if (fishY.current >= groundY) {
+          fishY.current = groundY;
+          fishVelocity.current = 0;
+          jumpCount.current = 0;
+        }
         
         const difficulty = getDifficultyState(score, elapsedMs, now);
-        const currentSpeed = difficulty.speed;
-        bgX1.current = (bgX1.current - currentSpeed * 0.3) % canvas.width;
-        bgX2.current = (bgX2.current - currentSpeed * 0.6) % canvas.width;
+        const currentSpeed = difficulty.speed * GAME_SPEED_MULTIPLIER;
+        bgX1.current = (bgX1.current - currentSpeed * 0.18) % canvas.width;
+        bgX2.current = (bgX2.current - currentSpeed * 0.34) % canvas.width;
 
         if (pipes.current.length === 0 || pipes.current[pipes.current.length - 1].x < canvas.width - difficulty.spacing) {
           const height = Math.random() * (difficulty.pipeMaxHeight - difficulty.pipeMinHeight) + difficulty.pipeMinHeight;

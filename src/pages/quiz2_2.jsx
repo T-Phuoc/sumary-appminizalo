@@ -1,6 +1,8 @@
 import { useFormState, globalFormMemory } from "../hooks/useFormState";
 import React, { useState } from "react";
-import { Page, useNavigate, Modal, Icon } from "zmp-ui";
+import { Page, Modal, Icon } from "zmp-ui";
+import { useNavigate } from "react-router-dom";
+import { isSuccessfulSurveyResponse, submitSurveyPayload } from "../utils/surveySubmit";
 // Lưu ý: Đổi tên file ảnh mascot đội mũ cử nhân cho đúng với source của bạn
 import mascotGradImg from "../static/images/Mascot Hito_2 1.png";
 import bgIndex from "../static/images/bg_home1.png";
@@ -35,6 +37,17 @@ const Quiz2_2Page = () => {
       return;
     }
     setIsConfirmVisible(true);
+  };
+
+  const goToThanks = () => {
+    navigate("/thanks", { replace: true });
+
+    setTimeout(() => {
+      const currentLocation = `${window.location.pathname}${window.location.hash}`;
+      if (!currentLocation.includes("thanks")) {
+        window.location.replace("/thanks");
+      }
+    }, 0);
   };
 
   const handleConfirm = async () => {
@@ -72,48 +85,23 @@ const Quiz2_2Page = () => {
     console.log("📤 [Quiz2_2] Payload gửi đi:", JSON.stringify(payload, null, 2));
 
     try {
-      // ĐÃ FIX: Chuyển về Domain của Server công ty để điện thoại không bị báo lỗi
-      const response = await fetch("https://api.hto.edu.vn/api/khao-sat/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const responseText = await response.text();
-      let result = {};
-      try {
-        result = responseText ? JSON.parse(responseText) : {};
-      } catch (parseError) {
-        console.error("❌ [Quiz2_2] Response không phải JSON:", responseText);
-        result = { message: responseText || "Backend trả về phản hồi không hợp lệ" };
-      }
-      console.log("📥 [Quiz2_2] Response từ server:", result);
+      const { response, responseText, result, endpoint } = await submitSurveyPayload(payload);
 
       if (!response.ok) {
-        alert(`Backend trả lỗi ${response.status}: ${result.message || responseText || "Không thể lưu dữ liệu"}`);
+        console.error("❌ [Quiz2_2] Submit failed at:", endpoint, result);
+        alert(
+          `Backend trả lỗi ${response.status} tại ${endpoint}: ${
+            result.message || responseText || "Không thể lưu dữ liệu"
+          }`
+        );
         return;
       }
 
-      const normalizedResponseText = String(responseText || "").trim().toLowerCase();
-      const isSuccess =
-        result.success === true ||
-        result.result === "success" ||
-        result.status === "success" ||
-        normalizedResponseText === "success" ||
-        normalizedResponseText.includes('"success"');
-
-      // Nếu HTTP OK thì ưu tiên chuyển sang trang cảm ơn để tránh kẹt vì format response
-      if (response.ok) {
-        console.log("✅ Gửi xong, chuyển sang thanks. Response:", result);
-        navigate("/thanks", { replace: true });
-        return;
-      }
+      const isSuccess = isSuccessfulSurveyResponse(result, responseText);
 
       if (isSuccess) {
         console.log("✅ Gửi thành công! Lưu vào:", result.sheet);
-        navigate("/thanks", { replace: true });
+        goToThanks();
       } else {
         alert("Lỗi: " + (result.message || "Không thể lưu dữ liệu"));
       }
@@ -295,11 +283,7 @@ const Quiz2_2Page = () => {
       <Modal
         visible={isConfirmVisible}
         title="Xác nhận"
-        onClose={() => {
-          if (!isSubmitting) {
-            setIsConfirmVisible(false);
-          }
-        }}
+        onClose={() => setIsConfirmVisible(false)}
         verticalActions
       >
         <div className="text-center mb-6 text-[#11397b] font-medium text-base">
@@ -309,20 +293,16 @@ const Quiz2_2Page = () => {
         </div>
         <div className="flex gap-3">
           <button
-            type="button"
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
             onClick={() => setIsConfirmVisible(false)}
-            disabled={isSubmitting}
           >
             Hủy
           </button>
           <button
-            type="button"
-            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform"
             onClick={handleConfirm}
-            disabled={isSubmitting}
           >
-            {isSubmitting ? "Đang xử lý..." : "Xác nhận"}
+            Xác nhận
           </button>
         </div>
       </Modal>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Page, useNavigate } from "zmp-ui";
 import { getAccessToken, getPhoneNumber } from "zmp-sdk/apis";
 import "react/jsx-runtime";
@@ -13,6 +13,7 @@ import Result from "../components/Result";
 import { NumerologyDemo } from "../components/numerology";
 import { fetchZaloUserName } from "../components/numerology/api";
 import { NumerologyFormValues } from "../components/numerology/types";
+import { globalFormMemory } from "../hooks/useFormState";
 
 function HomePagecareer() {
   const navigate = useNavigate();
@@ -22,12 +23,48 @@ function HomePagecareer() {
   const [isNumerologyOpen, setIsNumerologyOpen] = useState(false);
   const [numerologyPrefill, setNumerologyPrefill] = useState<Partial<NumerologyFormValues>>({});
 
+  const storedSurveyData = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("global_citizen_user_v1");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const futureMapApplicantData = useMemo(
+    () => ({
+      fullname:
+        storedSurveyData?.fullName ||
+        storedSurveyData?.fullname ||
+        globalFormMemory["q1_name"] ||
+        "",
+      phone:
+        storedSurveyData?.phoneNumber ||
+        storedSurveyData?.phone ||
+        storedSurveyData?.phone_number ||
+        globalFormMemory["user_phone"] ||
+        fetchedPhone ||
+        "",
+      email:
+        storedSurveyData?.userEmail ||
+        storedSurveyData?.email ||
+        globalFormMemory["q1_email"] ||
+        "",
+      agree:
+        typeof storedSurveyData?.phoneConsent === "boolean"
+          ? storedSurveyData.phoneConsent
+          : Boolean(globalFormMemory["q1_agreed"]),
+    }),
+    [storedSurveyData, fetchedPhone],
+  );
+
   const handleOpenNumerology = async () => {
     try {
       const accessToken = await getAccessToken({});
       const { token } = await getPhoneNumber({});
       const [phoneResponse, fullName] = await Promise.all([
-        fetch("https://api.hto.edu.vn/get-phone-new", {
+        fetch("https://survey-api.hto.edu.vn/get-phone-new", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -99,6 +136,7 @@ function HomePagecareer() {
         {activeProduct === "future-map" && !isNumerologyOpen && quizState.currentScreen === "form" && (
           <FormScreen
             initialPhone={fetchedPhone}
+            initialData={futureMapApplicantData}
             onSubmit={quizState.saveUserData}
             onBack={() => quizState.navigate("welcome")}
           />

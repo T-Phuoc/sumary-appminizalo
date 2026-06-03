@@ -2,6 +2,7 @@ import React from "react";
 import { Page, Modal, Icon } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
 import { useFormState, globalFormMemory } from "../hooks/useFormState";
+import { isSuccessfulSurveyResponse, submitSurveyPayload } from "../utils/surveySubmit";
 
 import mascotStudyAbroadImg from "../static/images/Mascot Hito_2 3.png"; 
 import bgIndex from "../static/images/bg_home1.png"; 
@@ -61,23 +62,15 @@ const Quiz2_3Page = () => {
     console.log("🎯 SelectedBlock:", payload.selectedBlock);
 
     try {
-      const response = await fetch("https://api.hto.edu.vn/api/khao-sat/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-      console.log("📥 [Quiz2_3] Response từ server:", result);
+      const { response, result, responseText, endpoint } = await submitSurveyPayload(payload);
+      console.log("📥 [Quiz2_3] Response từ server (%s):", endpoint, result);
       console.log("💾 Bảng lưu vào:", result.sheet || "Không xác định");
 
-      if (result.success) {
+      if (isSuccessfulSurveyResponse(result, responseText)) {
         console.log("✅ Gửi thành công! Lưu vào:", result.sheet);
         navigate("/thanks");
       } else {
-        alert("Lỗi: " + result.message);
+        alert("Lỗi: " + (result.message || responseText || "Không thể lưu dữ liệu"));
       }
     } catch (error) {
       alert("Không thể kết nối đến máy chủ Backend!");
