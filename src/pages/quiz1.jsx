@@ -230,12 +230,20 @@ const Quiz1Page = () => {
                 <button onClick={() => setGender("Nữ")} className={`flex-1 rounded-xl font-bold transition-all shadow-sm ${gender === "Nữ" ? "bg-[#ffadad] text-white" : "bg-gray-100 text-gray-400"}`}>Nữ</button>
               </div>
 
-              <button 
-                onClick={handleNext} 
+              {/* ĐÃ FIX SHRINK-0 CHO HÌNH TRÒN Ở KHỐI NÀY */}
+              <div className="px-2 pb-1 flex items-center gap-3 relative z-10">
+                <div onClick={() => setIsAgreed(!isAgreed)} className={`w-6 h-6 shrink-0 border-2 border-[#11397b] rounded-full flex items-center justify-center transition-all cursor-pointer ${isAgreed ? "bg-[#11397b]" : "bg-transparent"}`}>
+                  {isAgreed && <Icon icon="zi-check" className="text-white scale-75" />}
+                </div>
+                <span className="text-[#11397b] text-sm font-semibold cursor-pointer leading-snug" onClick={() => setIsAgreed(!isAgreed)}>Tôi đồng ý sử dụng thông tin cho bài khảo sát</span>
+              </div>
+
+              <button
+                onClick={handleNext}
                 disabled={!isAgreed}
                 className={`w-full py-4 text-lg font-bold rounded-2xl shadow-xl transition-all mt-2 relative z-10 ${
                   isAgreed 
-                    ? "bg-[#003570] text-white active:scale-95 cursor-pointer" 
+                    ? "bg-[#003570] text-white active:scale-95 cursor-pointer"
                     : "bg-gray-400 text-gray-100 opacity-60 cursor-not-allowed"
                 }`}
               >
@@ -243,14 +251,6 @@ const Quiz1Page = () => {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* ĐÃ FIX SHRINK-0 CHO HÌNH TRÒN Ở KHỐI NÀY */}
-        <div className="px-8 pb-8 flex items-center gap-3 relative z-10">
-          <div onClick={() => setIsAgreed(!isAgreed)} className={`w-6 h-6 shrink-0 border-2 border-[#11397b] rounded-full flex items-center justify-center transition-all cursor-pointer ${isAgreed ? "bg-[#11397b]" : "bg-transparent"}`}>
-            {isAgreed && <Icon icon="zi-check" className="text-white scale-75" />}
-          </div>
-          <span className="text-[#11397b] text-sm font-semibold cursor-pointer leading-snug" onClick={() => setIsAgreed(!isAgreed)}>Tôi đồng ý sử dụng thông tin cho bài khảo sát</span>
         </div>
       </div>
     </Page>

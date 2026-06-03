@@ -47,7 +47,7 @@ function CountrySelect() {
         {[...Array(10)].map((_, i) => <div key={i} className={`bubble b${i % 3}`}></div>)}
       </div>
 
-      <Box style={{ position: 'relative', zIndex: 10, padding: 'env(safe-area-inset-top) 16px 20px', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Box style={{ position: 'relative', zIndex: 10, padding: 'env(safe-area-inset-top) 14px 16px', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Box style={{ position: 'relative', width: '100%', maxWidth: 420 }}>
           
           <Box style={{
@@ -64,7 +64,7 @@ function CountrySelect() {
           </Box>
 
           <Box className="app-card card-deep-sea anim-fade-up shadow-deep" style={{ 
-            padding: "40px 18px",
+            padding: "28px 16px",
             width: "100%",
             maxWidth: 460,
             position: 'relative', zIndex: 15,
@@ -74,8 +74,8 @@ function CountrySelect() {
             backdropFilter: 'blur(12px)'
           }}>
             
-            <Box style={{ textAlign: 'center', marginBottom: 24 }}>
-              <Box className="badge-deep-sea pulse-slow shine-effect" style={{ display: 'inline-block', padding: '8px 24px', borderRadius: 50, marginBottom: 16, position: 'relative', overflow: 'hidden' }}>
+            <Box style={{ textAlign: 'center', marginBottom: 18 }}>
+              <Box className="badge-deep-sea pulse-slow shine-effect" style={{ display: 'inline-block', padding: '8px 22px', borderRadius: 50, marginBottom: 12, position: 'relative', overflow: 'hidden' }}>
                  <Text style={{ fontSize: 12, fontWeight: 900, color: '#fff', letterSpacing: '1.5px', position: 'relative', zIndex: 2 }}>ĐIỂM ĐẾN MƠ ƯỚC</Text>
               </Box>
               <Text style={{ fontSize: 28, fontWeight: 900, color: '#01579b', letterSpacing: '-0.5px' }}>Chọn Quốc Gia</Text>
@@ -85,14 +85,14 @@ function CountrySelect() {
             </Box>
 
             {loading ? (
-              <Box style={{ textAlign: 'center', padding: '60px 0' }}>
+              <Box style={{ textAlign: 'center', padding: '42px 0' }}>
                 <div className="loader-ocean"></div>
                 <Text style={{ color: '#01579b', fontWeight: 800, marginTop: 16 }}>Đang dò tìm vùng biển...</Text>
               </Box>
             ) : (
               <Box className="country-grid-scroll custom-scrollbar" style={{ 
                 display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', 
-                maxHeight: '380px', overflowY: 'auto', padding: '8px', marginBottom: 20 
+                maxHeight: '380px', overflowY: 'auto', padding: '8px', marginBottom: 16 
               }}>
                 {countries.map((c, idx) => {
                   const isActive = selectedCode === c.code;
@@ -103,7 +103,7 @@ function CountrySelect() {
                       className={`country-item shine-effect ${isActive ? 'selected' : ''}`}
                       style={{
                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
-                        padding: '18px 12px', borderRadius: 28, 
+                        padding: '16px 12px', borderRadius: 28, 
                         border: `3px solid ${isActive ? '#00acc1' : 'rgba(1, 87, 155, 0.12)'}`,
                         background: isActive ? '#fff' : 'rgba(255, 255, 255, 0.7)',
                         position: 'relative', overflow: 'hidden',
@@ -147,7 +147,7 @@ function CountrySelect() {
               ← Quay Lại
             </button>
 
-            <Box className="step-dots" style={{ marginTop: 24 }}>
+            <Box className="step-dots" style={{ marginTop: 18 }}>
               <Box className="step-dot done" />
               <Box className="step-dot done" />
               <Box className="step-dot done" />

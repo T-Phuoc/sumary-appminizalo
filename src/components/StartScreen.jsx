@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Box, Page, Text, Modal } from 'zmp-ui';
+import { Box, Page, Text, Modal, useNavigate } from 'zmp-ui';
 import api from 'zmp-sdk';
 import { followOA, getPhoneNumber, getAccessToken } from 'zmp-sdk/apis';
 import { useVisaTest } from '../context/VisaTestContext';
@@ -64,6 +64,7 @@ const OceanBackground = () => {
 
 function StartScreen() {
   const { setStep, setZaloData } = useVisaTest();
+  const navigate = useNavigate();
   const [isStarting, setIsStarting] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -193,11 +194,11 @@ function StartScreen() {
           position: 'relative', border: '5px solid #01579b', backdropFilter: 'blur(10px)'
         }}>
           
-          <Box onClick={handleLogoClick} style={{ position: 'relative', width: 160, height: 160, margin: '0 auto 30px', cursor: 'pointer', perspective: '1000px' }}>
+          <Box onClick={handleLogoClick} style={{ position: 'relative', width: 160, height: 160, margin: '0 auto 15px', cursor: 'pointer', perspective: '1000px' }}>
             <Box className="pulse-ring-inner" style={{ position: 'absolute', inset: -10, borderRadius: '50%', border: '2px solid rgba(0, 172, 193, 0.4)' }} />
             <Box className="logo-shiny-container" style={{ 
               width: '100%', height: '100%', borderRadius: '50%', background: '#fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', border: '5px solid #01579b',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', border: '4px solid #01579b',
               overflow: 'hidden', position: 'relative', zIndex: 2,
               transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
               transform: isRotating ? 'rotateY(360deg) scale(1.1)' : 'scale(1)',
@@ -211,8 +212,8 @@ function StartScreen() {
                  src="https://i.ibb.co/spWWgyp2/Gemini-Generated-Image-ouu4cuouu4cuouu4.png" 
                  alt="Logo_HITO" 
                  style={{ 
-                   width: '95%', 
-                   height: '95%', 
+                   width: '100%', 
+                   height: '100%', 
                    objectFit: 'contain', 
                    zIndex: 2, 
                    mixBlendMode: 'multiply',
@@ -223,22 +224,22 @@ function StartScreen() {
             </Box>
           </Box>
 
-          <Box style={{ marginBottom: 40, position: 'relative', overflow: 'hidden' }}>
+          <Box style={{ marginBottom: 15, position: 'relative', overflow: 'hidden' }}>
             <Box className="text-shiny-mask">
-                <Text style={{ fontSize: 38, fontWeight: 900, color: '#01579b', lineHeight: 1 }}>
+                <Text style={{ fontSize: 37, fontWeight: 900, color: '#01579b', lineHeight: 1.5 }}>
                     ĐÁNH GIÁ <span className="visa-cyan" style={{ color: '#01579b' }}>VISA</span>
                 </Text>
             </Box>
-            <Box className="title-line" style={{ width: 60, height: 5, background: 'linear-gradient(90deg, #01579b, #01579b)', margin: '15px auto', borderRadius: 10 }} />
+            <Box className="title-line" style={{ width: 80, height: 4, background: 'linear-gradient(90deg, #01579b, #01579b)', margin: '5px auto', borderRadius: 10 }} />
           </Box>
 
-          <Box style={{ textAlign: 'left', marginBottom: 35 }}>
+          <Box style={{ textAlign: 'left', marginBottom: 10 }}>
             {roadmapSteps.map((step, i) => (
-              <Box key={i} style={{ display: 'flex', gap: 20, position: 'relative', marginBottom: i !== roadmapSteps.length - 1 ? 35 : 0 }}>
-                {i !== roadmapSteps.length - 1 && <Box style={{ position: 'absolute', left: 19, top: 40, height: '100%', width: 2, borderLeft: '2px dashed #01579b' }} />}
-                <Box style={{ width: 40, height: 40, borderRadius: 14, background: 'linear-gradient(135deg, #01579b, #01579b)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 2, color: '#fff', fontWeight: 900 }}>{step.id}</Box>
+              <Box key={i} style={{ display: 'flex', gap: 10, position: 'relative', marginBottom: i !== roadmapSteps.length - 1 ? 5 : 0 }}>
+                {i !== roadmapSteps.length - 1 && <Box style={{ position: 'absolute', left: 16, top: 15, height: '100%', width: 5, borderLeft: '2px dashed #01579b' }} />}
+                <Box style={{ width: 38, height: 38, borderRadius: 14, background: 'linear-gradient(135deg, #01579b, #01579b)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 2, color: '#fff', fontWeight: 900 }}>{step.id}</Box>
                 <Box>
-                  <Text style={{ fontSize: 17, fontWeight: 800, color: '#01579b' }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: 800, color: '#01579b' }}>{step.title}</Text>
                   <Text style={{ fontSize: 14, color: '#546e7a' }}>{step.desc}</Text>
                 </Box>
               </Box>
@@ -246,16 +247,35 @@ function StartScreen() {
           </Box>
 
           <button onClick={handleStart} className="btn-start-shiny" style={{ 
-            width: '100%', padding: '22px', borderRadius: 20, border: 'none', 
+            width: '100%', padding: '16px', borderRadius: 20, border: 'none', 
             background: 'linear-gradient(90deg, #01579b, #00acc1, #01579b)', 
             backgroundSize: '200% auto', color: '#fff', fontSize: 19, fontWeight: 900, 
             boxShadow: '0 12px 30px rgba(0, 172, 193, 0.4)', cursor: 'pointer', overflow: 'hidden'
           }}>
-            {isStarting ? <Box className="anim-spin" style={{ width: 24, height: 24, border: '3px solid #fff', borderTopColor: 'transparent', borderRadius: '50%' }} /> : "🚀 BẮT ĐẦU NGAY"}
+            {isStarting ? <Box className="anim-spin" style={{ width: 20, height: 20, border: '3px solid #fff', borderTopColor: 'transparent', borderRadius: '50%' }} /> : "🚀 BẮT ĐẦU NGAY"}
+          </button>
+
+          <button
+            onClick={() => navigate('/more')}
+            style={{
+              width: '100%',
+              padding: '10px 15px',
+              marginTop: 10,
+              borderRadius: 15,
+              border: '1px solid rgba(1, 87, 155, 0.18)',
+              background: 'rgba(255, 255, 255, 0.75)',
+              color: '#01579b',
+              fontSize: 15,
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 8px 18px rgba(1, 87, 155, 0.08)',
+            }}
+          >
+            Quay lại khám phá
           </button>
           
-          <Text style={{ fontSize: 13, color: '#90a4ae', marginTop: 25, fontWeight: 600 }}>
-             Phát triển bởi <span className="hto-link" style={{ color: '#01579b', textDecoration: 'none', cursor: 'pointer', padding: '4px', position: 'relative' }}>HTO Group</span>
+          <Text style={{ fontSize: 14, color: '#90a4ae', marginTop: 20, fontWeight: 600 }}>
+             Phát triển bởi <span className="hto-link" style={{ color: '#01579b', textDecoration: 'none', cursor: 'pointer', padding: '5px', position: 'relative' }}>HTO Group</span>
           </Text>
         </Box>
       </Box>

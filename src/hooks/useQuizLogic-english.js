@@ -248,7 +248,7 @@ export const useQuizLogicenglish = (settings, userData, onFinish) => {
         // 4. HÀM KÍCH HOẠT OA (Sử dụng dataToSend để lấy biến)
         const triggerZaloOAMessage = async () => {
             try {
-                const backendUrl = "https://api.hto.edu.vn/send-oa-message";
+                const backendUrl = "https://survey-api.hto.edu.vn/send-oa-message";
                 await fetch(backendUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

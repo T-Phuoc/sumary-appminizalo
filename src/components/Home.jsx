@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getPhoneNumber, getAccessToken, getUserInfo, followOA } from "zmp-sdk/apis";
 import { appConfig } from '../public/models/DataModel';
 
-const BACKEND_URL = "https://api.hto.edu.vn/get-phone";
+const BACKEND_URL = "https://survey-api.hto.edu.vn/get-phone-new";
 const OA_ID = "2112176407138597287";
 
 const HITO_STICKERS = [

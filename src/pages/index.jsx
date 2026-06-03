@@ -34,7 +34,7 @@ const HomePage = () => {
 
       if (token && accessToken) {
         // 2. Gửi dữ liệu lên endpoint mới: /get-phone-new
-        const response = await fetch("https://api.hto.edu.vn/get-phone-new", {
+        const response = await fetch("https://survey-api.hto.edu.vn/get-phone-new", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const HomePage = () => {
           ))}
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center px-8">
+        <div className="flex-1 flex flex-col items-center justify-center px-8 pb-6">
           <div className="w-[80%] max-w-[260px] aspect-square flex items-center justify-center">
              <img src={mascotImg} alt="Mascot" className="w-full h-full object-contain" />
           </div>
@@ -106,13 +106,13 @@ const HomePage = () => {
           </button>
         </div>
 
-        <div className="px-8 pb-10 flex flex-col gap-3">
+        <div className="px-10 pt-0 pb-6 flex flex-col gap-3">
           {menuLinks.map((item, index) => (
             <div key={index} onClick={() => navigate(item.path)} className={`flex items-center ${item.reverse ? "flex-row-reverse" : ""} group cursor-pointer`}>
               <div className={`bg-[#ffadad] w-12 h-12 flex items-center justify-center shadow-sm z-10 ${item.reverse ? "rounded-r-2xl rounded-l-none" : "rounded-l-2xl rounded-r-none"}`}>
                 <img src={item.img} alt={item.label} className="w-6 h-6 object-contain" />
               </div>
-              <div className={`flex-1 bg-white/30 backdrop-blur-lg py-3 px-4 rounded-2xl border border-white/40 text-white font-semibold text-sm ${item.reverse ? "rounded-r-none text-right mr-[-4px]" : "rounded-l-none ml-[-4px]"}`}>
+              <div className={`flex-1 bg-white/30 backdrop-blur-lg py-3 px-2 rounded-2xl border border-white/40 text-[#11397b] font-semibold text-sm drop-shadow-sm ${item.reverse ? "rounded-r-none text-right mr-[-4px]" : "rounded-l-none ml-[-4px]"}`}>
                 {item.label}
               </div>
             </div>

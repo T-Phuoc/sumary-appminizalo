@@ -1,40 +1,65 @@
 import { useFormState, globalFormMemory } from "../hooks/useFormState";
 import React, { useState } from "react";
-import { Page, useNavigate, Modal, Icon } from "zmp-ui";
+import { Page, Modal, Icon } from "zmp-ui";
+import { useNavigate } from "react-router-dom";
+import { isSuccessfulSurveyResponse, submitSurveyPayload } from "../utils/surveySubmit";
 // Lưu ý: Đổi tên file ảnh mascot đội mũ cử nhân cho đúng với source của bạn
 import mascotGradImg from "../static/images/Mascot Hito_2 1.png";
 import bgIndex from "../static/images/bg_home1.png";
 
 const Quiz2_2Page = () => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // --- States cho Hệ đào tạo ---
-  const [eduSystem, setEduSystem] = useFormState("eduSystem", "");
-  const [isEduOpen, setIsEduOpen] = useFormState("isEduOpen", false);
+  const [eduSystem, setEduSystem] = useFormState("q2_2_eduSystem", "");
+  const [isEduOpen, setIsEduOpen] = useFormState("q2_2_isEduOpen", false);
   const eduOptions = ["Cao đẳng", "Đại học", "Trung cấp nghề", "Khác"];
 
   // --- States cho Ngành học ---
-  const [major, setMajor] = useFormState("major", "");
-  const [isMajorOpen, setIsMajorOpen] = useFormState("isMajorOpen", false);
+  const [major, setMajor] = useFormState("q2_2_major", "");
+  const [isMajorOpen, setIsMajorOpen] = useFormState("q2_2_isMajorOpen", false);
   const majorOptions = ["Kinh tế", "Công nghệ thông tin (IT)", "Điện - Điện tử", "Du lịch - Khách sạn", "Ngôn ngữ", "Khác"];
 
   // State Modal xác nhận
-  const [isConfirmVisible, setIsConfirmVisible] = useFormState("isConfirmVisible", false);
+  const [isConfirmVisible, setIsConfirmVisible] = useFormState("q2_2_isConfirmVisible", false);
 
   // Xử lý Ghi nhận
   const handleRecord = () => {
-    if (!eduSystem || !major) {
-      alert("Vui lòng nhập/chọn đầy đủ Hệ đào tạo và Ngành học!");
+    const normalizedEduSystem = String(eduSystem || "").trim();
+    const normalizedMajor = String(major || "").trim();
+
+    if (!normalizedEduSystem || !normalizedMajor) {
+      const missingFields = [];
+      if (!normalizedEduSystem) missingFields.push("Hệ đào tạo");
+      if (!normalizedMajor) missingFields.push("Ngành học");
+      alert(`Vui lòng nhập/chọn đầy đủ: ${missingFields.join(" và ")}!`);
       return;
     }
     setIsConfirmVisible(true);
   };
 
+  const goToThanks = () => {
+    navigate("/thanks", { replace: true });
+
+    setTimeout(() => {
+      const currentLocation = `${window.location.pathname}${window.location.hash}`;
+      if (!currentLocation.includes("thanks")) {
+        window.location.replace("/thanks");
+      }
+    }, 0);
+  };
+
   const handleConfirm = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     setIsConfirmVisible(false);
 
     // Cập nhật giá trị tên để tránh bị Apps Script gán là "Khách Game"
     const finalName = globalFormMemory["q1_name"] || "Khách Khảo Sát";
+    const normalizedEduSystem = String(eduSystem || "").trim();
+    const normalizedMajor = String(major || "").trim();
 
     // 1. Gom toàn bộ dữ liệu từ các bước trước - ĐÃ CHUẨN HÓA KEY CHO APPS SCRIPT
     const payload = {
@@ -48,8 +73,11 @@ const Quiz2_2Page = () => {
       className: globalFormMemory["q1_class"] || "N/A",
       selectedBlock: globalFormMemory["selectedBlock"] || "N/A",
       pathway: "Trong nước",              // Key quan trọng để Apps Script nhận diện isKhaoSatHito
-      eduSystem: eduSystem,
-      major: major,
+      eduSystem: normalizedEduSystem,
+      educationLevel: normalizedEduSystem,
+      trainingSystem: normalizedEduSystem,
+      heDaoTao: normalizedEduSystem,
+      major: normalizedMajor,
       phone: globalFormMemory["user_phone"] || "0912345678",
       studyCountry: "Việt Nam"             // Khớp với cột 'Quốc gia' trong Apps Script
     };
@@ -57,28 +85,31 @@ const Quiz2_2Page = () => {
     console.log("📤 [Quiz2_2] Payload gửi đi:", JSON.stringify(payload, null, 2));
 
     try {
-      // ĐÃ FIX: Chuyển về Domain của Server công ty để điện thoại không bị báo lỗi
-      const response = await fetch("https://api.hto.edu.vn/api/khao-sat/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const { response, responseText, result, endpoint } = await submitSurveyPayload(payload);
 
-      const result = await response.json();
-      console.log("📥 [Quiz2_2] Response từ server:", result);
+      if (!response.ok) {
+        console.error("❌ [Quiz2_2] Submit failed at:", endpoint, result);
+        alert(
+          `Backend trả lỗi ${response.status} tại ${endpoint}: ${
+            result.message || responseText || "Không thể lưu dữ liệu"
+          }`
+        );
+        return;
+      }
 
-      // Apps Script trả về thành công qua biến success hoặc result
-      if (result.success || result.result === "success") {
+      const isSuccess = isSuccessfulSurveyResponse(result, responseText);
+
+      if (isSuccess) {
         console.log("✅ Gửi thành công! Lưu vào:", result.sheet);
-        navigate("/thanks");
+        goToThanks();
       } else {
         alert("Lỗi: " + (result.message || "Không thể lưu dữ liệu"));
       }
     } catch (error) {
       alert("Không thể kết nối đến máy chủ Backend!");
       console.error("❌ [Quiz2_2] Lỗi gửi dữ liệu:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -219,6 +250,7 @@ const Quiz2_2Page = () => {
 
               {/* Nút Ghi nhận */}
               <button
+                type="button"
                 onClick={handleRecord}
                 className="w-full py-4 bg-[#003570] text-white text-lg font-bold rounded-2xl shadow-xl active:scale-95 transition-all mt-2 relative z-10"
               >

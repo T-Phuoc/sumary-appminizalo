@@ -34,7 +34,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onBack }) => {
       const accessToken = await getAccessToken({});
       const { token } = await getPhoneNumber({});
 
-      const response = await fetch("https://api.hto.edu.vn/get-phone-new", {
+      const response = await fetch("https://survey-api.hto.edu.vn/get-phone-new", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
