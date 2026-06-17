@@ -97,8 +97,8 @@ const HomePage = () => {
              <img src={mascotImg} alt="Mascot" className="w-full h-full object-contain" />
           </div>
 
-          <h1 className="mt-6 text-[38px] md:text-[40px] font-black text-[#11397b] text-center leading-tight tracking-tighter drop-shadow-sm">
-            Khám Phá <br /> Cùng Hito
+          <h1 className="mt-6 text-[35px] md:text-[40px] font-black text-[#11397b] text-center leading-tight tracking-tighter drop-shadow-sm">
+            Khám Phá Thế Giới <br /> Cùng Hito
           </h1>
 
           <button onClick={() => navigate("/quiz1")} className="mt-8 w-full max-w-[320px] py-4 bg-[#003570] text-white text-lg font-bold rounded-2xl shadow-xl active:scale-95 transition-all">
@@ -106,7 +106,7 @@ const HomePage = () => {
           </button>
         </div>
 
-        <div className="px-10 pt-0 pb-10 flex flex-col gap-3">
+        {/* <div className="px-10 pt-0 pb-10 flex flex-col gap-3">
           {menuLinks.map((item, index) => (
             <div key={index} onClick={() => navigate(item.path)} className={`flex items-center ${item.reverse ? "flex-row-reverse" : ""} group cursor-pointer`}>
               <div className={`bg-[#ffadad] w-12 h-12 flex items-center justify-center shadow-sm z-10 ${item.reverse ? "rounded-r-2xl rounded-l-none" : "rounded-l-2xl rounded-r-none"}`}>
@@ -117,7 +117,7 @@ const HomePage = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </Page>
   );

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Page, useNavigate, Icon, Modal } from "zmp-ui";
+import React, { useEffect } from "react";
+import { Page, useNavigate, Icon } from "zmp-ui";
 
 // Lưu ý: Thay đổi tên file hình ảnh mascot tung hoa giấy cho phù hợp với dự án
 import mascotThanksImg from "../static/images/arigato.png"; 
@@ -15,32 +15,13 @@ import iconContact from "../static/icons/phone.png";      // Thay bằng tên fi
 const ThanksPage = () => {
   const navigate = useNavigate();
 
-  // State quản lý việc hiển thị popup
-  const [isSuggestModalVisible, setIsSuggestModalVisible] = useState(false);
-
-  // Hiệu ứng đếm ngược: 1 giây sau khi vào trang sẽ hiện Modal (rút ngắn để xuất hiện nhanh hơn)
+  // Tự động chuyển sang trang 'more' sau 2 giây
   useEffect(() => {
-    const showTimer = setTimeout(() => {
-      setIsSuggestModalVisible(true);
-    }, 1000); // Đợi 1 giây
-
-    // Dọn dẹp bộ đếm khi rời khỏi trang để tránh rò rỉ bộ nhớ
-    return () => clearTimeout(showTimer);
-  }, []);
-
-  // Hiệu ứng đếm ngược: Tự tắt Modal sau 5 giây kể từ lúc hiện lên
-  useEffect(() => {
-    let hideTimer;
-    if (isSuggestModalVisible) {
-      hideTimer = setTimeout(() => {
-        setIsSuggestModalVisible(false);
-      }, 10000); // Tồn tại trong 10 giây
-    }
-
-    return () => {
-      if (hideTimer) clearTimeout(hideTimer);
-    };
-  }, [isSuggestModalVisible]);
+    const t = setTimeout(() => {
+      navigate("/more");
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [navigate]);
 
   // Danh sách các nút link
   const menuLinks = [
@@ -111,34 +92,7 @@ const ThanksPage = () => {
 
       </div>
 
-      {/* ================= POPUP HỎI KHÁM PHÁ THÊM ================= */}
-      <Modal
-        visible={isSuggestModalVisible}
-        title="Khám phá thêm!"
-        onClose={() => setIsSuggestModalVisible(false)} // Bấm ra ngoài để đóng
-        verticalActions
-      >
-        <div className="text-center mb-6 text-[#11397b] font-medium text-base">
-          Bạn có muốn khám phá thêm <br/> các nội dung thú vị khác không?
-        </div>
-        <div className="flex gap-3">
-          <button 
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={() => setIsSuggestModalVisible(false)}
-          >
-            Không
-          </button>
-          <button 
-            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform shadow-lg"
-            onClick={() => {
-              setIsSuggestModalVisible(false);
-              navigate("/more"); // Chuyển sang trang more
-            }}
-          >
-            Có
-          </button>
-        </div>
-      </Modal>
+      {/* Tự động chuyển tiếp sang /more sau 2s; modal gỡ khỏi UI */}
 
     </Page>
   );

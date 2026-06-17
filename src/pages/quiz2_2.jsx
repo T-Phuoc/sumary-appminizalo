@@ -1,6 +1,6 @@
 import { useFormState, globalFormMemory } from "../hooks/useFormState";
 import React, { useState } from "react";
-import { Page, Modal, Icon } from "zmp-ui";
+import { Page, Icon } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
 import { isSuccessfulSurveyResponse, submitSurveyPayload } from "../utils/surveySubmit";
 // Lưu ý: Đổi tên file ảnh mascot đội mũ cử nhân cho đúng với source của bạn
@@ -21,8 +21,7 @@ const Quiz2_2Page = () => {
   const [isMajorOpen, setIsMajorOpen] = useFormState("q2_2_isMajorOpen", false);
   const majorOptions = ["Kinh tế", "Công nghệ thông tin (IT)", "Điện - Điện tử", "Du lịch - Khách sạn", "Ngôn ngữ", "Khác"];
 
-  // State Modal xác nhận
-  const [isConfirmVisible, setIsConfirmVisible] = useFormState("q2_2_isConfirmVisible", false);
+  // Modal xác nhận đã gỡ: gửi dữ liệu ngay khi bấm Ghi nhận
 
   // Xử lý Ghi nhận
   const handleRecord = () => {
@@ -36,7 +35,8 @@ const Quiz2_2Page = () => {
       alert(`Vui lòng nhập/chọn đầy đủ: ${missingFields.join(" và ")}!`);
       return;
     }
-    setIsConfirmVisible(true);
+    // Gửi trực tiếp (không hiển thị modal xác nhận)
+    handleConfirm();
   };
 
   const goToThanks = () => {
@@ -54,7 +54,6 @@ const Quiz2_2Page = () => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-    setIsConfirmVisible(false);
 
     // Cập nhật giá trị tên để tránh bị Apps Script gán là "Khách Game"
     const finalName = globalFormMemory["q1_name"] || "Khách Khảo Sát";
@@ -279,33 +278,7 @@ const Quiz2_2Page = () => {
 
       </div>
 
-      {/* Hộp thoại xác nhận */}
-      <Modal
-        visible={isConfirmVisible}
-        title="Xác nhận"
-        onClose={() => setIsConfirmVisible(false)}
-        verticalActions
-      >
-        <div className="text-center mb-6 text-[#11397b] font-medium text-base">
-          Bạn chắc chắn muốn chọn <br />
-          <span className="font-bold text-lg text-[#ff4d4f]">{eduSystem}</span> <br />
-          ngành <span className="font-bold text-lg text-[#ff4d4f]">{major}</span> chứ?
-        </div>
-        <div className="flex gap-3">
-          <button
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={() => setIsConfirmVisible(false)}
-          >
-            Hủy
-          </button>
-          <button
-            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={handleConfirm}
-          >
-            Xác nhận
-          </button>
-        </div>
-      </Modal>
+      {/* Modal xác nhận đã gỡ — gửi dữ liệu ngay khi bấm Ghi nhận */}
 
     </Page>
   );

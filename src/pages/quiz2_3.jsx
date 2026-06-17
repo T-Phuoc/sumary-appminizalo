@@ -1,5 +1,5 @@
 import React from "react";
-import { Page, Modal, Icon } from "zmp-ui";
+import { Page, Icon } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
 import { useFormState, globalFormMemory } from "../hooks/useFormState";
 import { isSuccessfulSurveyResponse, submitSurveyPayload } from "../utils/surveySubmit";
@@ -20,8 +20,7 @@ const Quiz2_3Page = () => {
   const [isMajorOpen, setIsMajorOpen] = useFormState("q3_isMajorOpen", false);
   const majorOptions = ["Kinh tế", "Kỹ thuật", "Công nghệ thông tin (IT)", "Y Dược", "Nghệ thuật - Thiết kế", "Khác"];
 
-  // State Modal xác nhận
-  const [isConfirmVisible, setIsConfirmVisible] = useFormState("q3_isConfirmVisible", false);
+  // Modal xác nhận đã gỡ: gửi dữ liệu ngay khi bấm Ghi nhận
 
   // Xử lý Ghi nhận
   const handleRecord = () => {
@@ -29,11 +28,12 @@ const Quiz2_3Page = () => {
       alert("Vui lòng nhập/chọn đầy đủ Quốc gia và Ngành học!");
       return;
     }
-    setIsConfirmVisible(true);
+    // Gửi trực tiếp (không hiển thị modal xác nhận)
+    handleConfirm();
   };
 
   const handleConfirm = async () => {
-    setIsConfirmVisible(false);
+    // Không cần set modal visibility
 
     // 1. Gom toàn bộ dữ liệu từ các bước trước
     const payload = {
@@ -211,32 +211,7 @@ const Quiz2_3Page = () => {
         </div>
       </div>
 
-      <Modal
-        visible={isConfirmVisible}
-        title="Xác nhận"
-        onClose={() => setIsConfirmVisible(false)}
-        verticalActions
-      >
-        <div className="text-center mb-6 text-[#11397b] font-medium text-base">
-          Bạn chắc chắn muốn du học tại <br/>
-          <span className="font-bold text-lg text-[#ff4d4f]">{studyCountry}</span> <br/>
-          ngành <span className="font-bold text-lg text-[#ff4d4f]">{major}</span> chứ?
-        </div>
-        <div className="flex gap-3">
-          <button 
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={() => setIsConfirmVisible(false)}
-          >
-            Hủy
-          </button>
-          <button 
-            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={handleConfirm}
-          >
-            Xác nhận
-          </button>
-        </div>
-      </Modal>
+      {/* Modal xác nhận đã gỡ — gửi dữ liệu ngay khi bấm Ghi nhận */}
     </Page>
   );
 };

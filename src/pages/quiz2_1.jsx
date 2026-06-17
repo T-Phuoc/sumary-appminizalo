@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // Nhớ import thêm Icon
-import { Page, useNavigate, Modal, Icon } from "zmp-ui";
+import { Page, useNavigate, Icon } from "zmp-ui";
 
 import mascotThinkingImg from "../static/images/sticker_hito_15 1.png"; 
 import bgIndex from "../static/images/bg_home1.png"; 
@@ -8,17 +8,8 @@ import bgIndex from "../static/images/bg_home1.png";
 const Quiz2_1Page = () => {
   const navigate = useNavigate();
   
-  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-  const [currentOption, setCurrentOption] = useState({ label: "", path: "" });
-
   const handleOptionClick = (label, path) => {
-    setCurrentOption({ label, path });
-    setIsConfirmVisible(true);
-  };
-
-  const handleConfirm = () => {
-    setIsConfirmVisible(false);
-    navigate(currentOption.path); 
+    navigate(path);
   };
 
   return (
@@ -89,32 +80,7 @@ const Quiz2_1Page = () => {
 
       </div>
 
-      {/* Hộp thoại xác nhận (Modal) */}
-      <Modal
-        visible={isConfirmVisible}
-        title="Xác nhận"
-        onClose={() => setIsConfirmVisible(false)}
-        verticalActions
-      >
-        <div className="text-center mb-6 text-[#11397b] font-medium text-base">
-          Bạn chắc chắn muốn chọn <br/>
-          <span className="font-bold text-lg text-[#ff4d4f]">"{currentOption.label}"</span> chứ?
-        </div>
-        <div className="flex gap-3">
-          <button 
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={() => setIsConfirmVisible(false)}
-          >
-            Không
-          </button>
-          <button 
-            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={handleConfirm}
-          >
-            Có
-          </button>
-        </div>
-      </Modal>
+      {/* Modal xác nhận đã gỡ — chuyển tiếp trực tiếp khi chọn */}
 
     </Page>
   );
