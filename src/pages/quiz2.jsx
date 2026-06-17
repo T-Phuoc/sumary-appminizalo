@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // Đã thêm Icon vào phần import
-import { Page, useNavigate, Modal, Icon } from "zmp-ui";
+import { Page, useNavigate, Icon } from "zmp-ui";
 import { useFormState } from "../hooks/useFormState";
 import mascotImg from "../static/images/Mascot Hito_10 2.png"; 
 import bgIndex from "../static/images/bg_home1.png"; 
@@ -10,7 +10,6 @@ const Quiz2Page = () => {
   
   // State quản lý lựa chọn tổ hợp
   const [selectedBlock, setSelectedBlock] = useFormState("selectedBlock", null);
-  const [isConfirmVisible, setIsConfirmVisible] = useFormState("isConfirmVisible", false);
 
   const examBlocks = [
     { id: "A", label: "Khối A (Toán, Lý, Hóa)" },
@@ -20,10 +19,10 @@ const Quiz2Page = () => {
     { id: "C", label: "Khối C (Văn, Sử, Địa)" },
   ];
 
-  // Hàm xử lý khi bấm nút Ghi nhận
-  const handleRecord = () => { 
-    if (!selectedBlock) return alert("Vui lòng chọn khối!"); 
-    setIsConfirmVisible(true); 
+  // Hàm xử lý khi bấm nút Ghi nhận — chuyển tiếp ngay sang trang tiếp theo
+  const handleRecord = () => {
+    if (!selectedBlock) return alert("Vui lòng chọn khối!");
+    navigate("/quiz2_1"); // chuyển tiếp ngay
   };
 
   return (
@@ -116,32 +115,7 @@ const Quiz2Page = () => {
         </div>
       </div>
 
-      {/* Hộp thoại xác nhận (ZMP Modal) */}
-      <Modal
-        visible={isConfirmVisible}
-        title="Xác nhận"
-        onClose={() => setIsConfirmVisible(false)}
-        verticalActions
-        description={`Bạn có chắc chắn muốn ghi nhận ${examBlocks.find(b => b.id === selectedBlock)?.label} không?`}
-      >
-        <div className="flex gap-3">
-          <button 
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={() => setIsConfirmVisible(false)}
-          >
-            Hủy
-          </button>
-          <button 
-            className="flex-1 py-3 bg-[#003570] text-white font-bold rounded-xl active:scale-95 transition-transform"
-            onClick={() => {
-              setIsConfirmVisible(false);
-              navigate("/quiz2_1"); // Đường dẫn trang tiếp theo
-            }}
-          >
-            Xác nhận
-          </button>
-        </div>
-      </Modal>
+      {/* Modal xác nhận đã bị gỡ — chuyển tiếp trực tiếp khi ghi nhận */}
 
     </Page>
   );

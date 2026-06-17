@@ -19,6 +19,7 @@ const Quiz1Page = () => {
   
   const [gender, setGender] = useFormState("q1_gender", "Nam");
   const [isAgreed, setIsAgreed] = useFormState("q1_agreed", false);
+  const [schoolLevel, setSchoolLevel] = useFormState("q1_schoolLevel", "THPT");
 
   const [provinceInput, setProvinceInput] = useFormState("q1_province", "");
   const [schoolInput, setSchoolInput] = useFormState("q1_school", "");
@@ -75,7 +76,7 @@ const Quiz1Page = () => {
     setIsSchoolOpen(false);
   };
 
-  // ================= LOGIC XỬ LÝ NHẬP LỚP HỌC (CHỈ CHO PHÉP 10, 11, 12) =================
+  // ================= LOGIC XỬ LÝ NHẬP LỚP HỌC =================
   const handleClassChange = (e) => {
     // Chuyển in hoa luôn cho đẹp (vd: 10a1 -> 10A1)
     const val = e.target.value.toUpperCase();
@@ -92,9 +93,13 @@ const Quiz1Page = () => {
       return;
     }
 
-    // Từ ký tự thứ 2 trở đi, 2 số đầu bắt buộc phải là 10, 11 hoặc 12
+    // Từ ký tự thứ 2 trở đi, prefix phải khớp cấp học đã chọn
     const prefix = val.substring(0, 2);
-    if (["10", "11", "12"].includes(prefix)) {
+    const validPrefixes = schoolLevel === "THCS" ? ["6", "7", "8", "9"] : ["10", "11", "12"];
+    if (
+      (schoolLevel === "THCS" && validPrefixes.includes(prefix.substring(0, 1))) ||
+      (schoolLevel === "THPT" && validPrefixes.includes(prefix))
+    ) {
       setClassName(val);
     }
   };
@@ -115,7 +120,7 @@ const Quiz1Page = () => {
     }
 
     // Nếu vượt qua hết các bài kiểm tra trên thì mới cho chuyển trang
-    navigate("/quiz2");
+    navigate(schoolLevel === "THCS" ? "/quiz2_1" : "/quiz2");
   };
 
   const SolidCaret = ({ isOpen, onClick }) => (
@@ -169,7 +174,7 @@ const Quiz1Page = () => {
               Thông Tin Cá Nhân
             </h2>
 
-            <div className="space-y-4 overflow-y-visible flex-1 pr-1 custom-scrollbar">
+            <div className="space-y-2 overflow-y-visible flex-1 pr-1 custom-scrollbar">
               
               <fieldset className="border-2 border-[#11397b] rounded-xl px-3 pb-1 bg-white relative z-0">
                 <legend className="text-[#11397b] font-bold px-2 ml-2 text-xs">Họ và tên</legend>
@@ -249,6 +254,59 @@ const Quiz1Page = () => {
                 )}
               </fieldset>
 
+              <div className="flex gap-4 h-10 relative z-10 items-center px-2">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSchoolLevel("THPT")}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") setSchoolLevel("THPT");
+                  }}
+                  className="flex items-center gap-3 cursor-pointer select-none"
+                >
+                  <span className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${schoolLevel === "THPT" ? "border-[#003570]" : "border-[#11397b]"}`}>
+                    {schoolLevel === "THPT" && <span className="w-3 h-3 rounded-full bg-[#003570]"></span>}
+                  </span>
+                  <span className={`font-bold ${schoolLevel === "THPT" ? "text-[#003570]" : "text-[#11397b]"}`}>
+                    THPT
+                  </span>
+                </div>
+
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSchoolLevel("THCS")}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") setSchoolLevel("THCS");
+                  }}
+                  className="flex items-center gap-3 cursor-pointer select-none"
+                >
+                  <span className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${schoolLevel === "THCS" ? "border-[#003570]" : "border-[#11397b]"}`}>
+                    {schoolLevel === "THCS" && <span className="w-3 h-3 rounded-full bg-[#003570]"></span>}
+                  </span>
+                  <span className={`font-bold ${schoolLevel === "THCS" ? "text-[#003570]" : "text-[#11397b]"}`}>
+                    THCS
+                  </span>
+                </div>
+
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSchoolLevel("Khác")}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") setSchoolLevel("Khác");
+                  }}
+                  className="flex items-center gap-3 cursor-pointer select-none"
+                >
+                  <span className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${schoolLevel === "Khác" ? "border-[#003570]" : "border-[#11397b]"}`}>
+                    {schoolLevel === "Khác" && <span className="w-3 h-3 rounded-full bg-[#003570]"></span>}
+                  </span>
+                  <span className={`font-bold ${schoolLevel === "Khác" ? "text-[#003570]" : "text-[#11397b]"}`}>
+                    Khác
+                  </span>
+                </div>
+              </div>
+
               <div className="flex gap-3 h-14 relative z-10">
                 <fieldset className="border-2 border-[#11397b] rounded-xl px-3 pb-1 relative flex-[1.2] bg-white">
                   <legend className="text-[#11397b] font-bold px-2 ml-2 text-xs">Lớp</legend>
@@ -256,7 +314,7 @@ const Quiz1Page = () => {
                     type="text" 
                     value={className} 
                     onChange={handleClassChange}  
-                    placeholder="10A5" 
+                    placeholder={schoolLevel === "THCS" ? "9A1" : "10A5"} 
                     className="w-full bg-transparent outline-none text-[#11397b] font-medium py-1" 
                   />
                 </fieldset>
